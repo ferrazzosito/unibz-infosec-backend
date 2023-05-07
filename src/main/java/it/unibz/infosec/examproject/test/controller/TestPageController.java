@@ -1,4 +1,4 @@
-package it.unibz.infosec.examproject.controller;
+package it.unibz.infosec.examproject.test.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
