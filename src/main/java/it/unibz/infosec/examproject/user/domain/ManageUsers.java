@@ -14,7 +14,6 @@ public class ManageUsers {
     @Autowired
     public ManageUsers(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.searchUsers = searchUsers;
     }
 
     private User validateUser (Long id) {
