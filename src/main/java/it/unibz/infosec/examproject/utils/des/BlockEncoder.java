@@ -25,7 +25,4 @@ public class BlockEncoder {
 		return ip;
 	}
 
-//	public static void main(String[] args) {
-//		System.out.println(encodeBlock("0000000100100011010001010110011110001001101010111100110111101111"));
-//	}
 }

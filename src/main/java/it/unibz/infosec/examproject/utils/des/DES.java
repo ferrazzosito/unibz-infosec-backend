@@ -4,7 +4,7 @@ public class DES {
 
 
 	public static String encodeMessage (String message, String key) {
-		return performRounds(BlockEncoder.encodeBlock(message), SubKeysGenerator.generateSubKeys(key));
+		return performRoundsEncryption(BlockEncoder.encodeBlock(message), SubKeysGenerator.generateSubKeys(key));
 	}
 
 	public static String decodeMessage (String message, String key) {
@@ -103,7 +103,18 @@ public class DES {
 				33, 1, 41, 9, 49, 17, 57, 25
 		};
 
-	private static String performRounds(String ip, String[] keys) {
+	//The array is considered to have numbers of the nth number ot be positioned not the position itself
+	// so a -1 is required to not exceed array bounds
+	private static String performPermutation(int[] arrayPerms, String input) {
+		String output = "";
+		for (int i = 0; i < arrayPerms.length; i++) {
+			output += input.charAt(arrayPerms[i]-1);
+		}
+
+		return output;
+	}
+
+	private static String performRoundsEncryption(String ip, String[] keys) {
 
 		String cyphertext = "";
 
@@ -111,94 +122,30 @@ public class DES {
 		String Ln_minus_1 = ip.substring(0, 32);
 		String Rn_minus_1 = ip.substring(32);
 
-		String[] L = new String[16];
-		String[] R = new String[16];
-
 //------------------------------
 
 		for(int j = 0; j < 16; j++) {
-			// for n from 1 to 16
-			// Ln = Rn-1
-			// Rn =  Utils.computeXOR(Ln-1,f(Rn-1,Kn))
-			String Ln = Rn_minus_1;
-			String Rn;
 
-			// computation of f(Rn-1,Kn)
-			String fn = "";
-			String e_Rn_minus_1 = "";
+			String[] RnLn = performRounds(keys, Ln_minus_1, Rn_minus_1, j);
+			String Ln = RnLn[0];
+			String Rn = RnLn[1];
 
-			// Apply Expansion table E to expand Rn-1
-			for (int i = 0; i < E.length; i++) {
-				e_Rn_minus_1 += Rn_minus_1.charAt(E[i]-1);
-			}
-			//Compute XOR of E(Rn-1) and Kn
-			//Divide the resulting string into 8 substrings of length 6
-			String[] b = new String[8];
-
-			String XOR_result = Utils.computeXOR(e_Rn_minus_1, keys[j]); //keys dovrebbe essere con j no?
-
-			b = Utils.splitEqually(XOR_result, 6);
-
-			int[][][] s = new int[][][]{s1, s2, s3, s4, s5, s6, s7, s8};
-
-			// for i from 0 to 7
-			//convert b[i][0]b[i][5] into a decimal row
-			//convert b[i][1]b[i][2]b[i]30]b[i][4] into a decimal column
-
-//			System.out.println(Arrays.toString(b));
-
-			String[] s_b = new String[8];
-
-			for(int i = 0; i < 8; i++) {
-				s_b[i] = Integer.toBinaryString(
-							s[i]
-							[Integer.parseInt(b[i].charAt(0) + "" + b[i].charAt(5),2)]
-							[Integer.parseInt(b[i].charAt(1) + "" + b[i].charAt(2) + "" + b[i].charAt(3) + "" + b[i].charAt(4) ,2)]
-						);
-			}
-
-			//transform si[row][column] into a binary number of 4 bits
-			//compute S by merging s1(b[0])...s8(b[7])
-
-
-			String S = "";
-
-			for(int i = 0; i < s_b.length; i++) {
-
-				while(s_b[i].length() < 4)
-					s_b[i] = "0" + s_b[i];
-
-				S += s_b[i];
-			}
-
-			//compute f(Rn-1,Kn) by permuting S using p
-			for (int i = 0; i < p.length; i++) {
-				fn += S.charAt(p[i]-1);
-			}
-
-			Rn = Utils.computeXOR(Ln_minus_1,fn);
-
-			L[j] = Ln;
-			R[j] = Rn;
-
-			Ln_minus_1 = Ln;
 			Rn_minus_1 = Rn;
+			Ln_minus_1 = Ln;
+
 		}
 
 //------------------------------
 		
 		//merge R16 and L16 (R16 first)
-		String RL16 = R[15] + L[15];
-		// Apply Final Permutation FP 
-		for (int i = 0; i < FP.length; i++) {
-			cyphertext += RL16.charAt(FP[i] -1);
-		}
+		String RL16 = Rn_minus_1 + Ln_minus_1;
+		// Apply Final Permutation FP
+		cyphertext = performPermutation(FP, RL16);
 
 		return cyphertext;
 	}
 
-
-	public static String performRoundsDecryption(String ip, String[] keys) {
+	private static String performRoundsDecryption(String ip, String[] keys) {
 
 		String cyphertext = "";
 
@@ -206,96 +153,81 @@ public class DES {
 		String Ln_minus_1 = ip.substring(0, 32);
 		String Rn_minus_1 = ip.substring(32);
 
-		String[] L = new String[16];
-		String[] R = new String[16];
-
 //------------------------------
 
 		for(int j = 15; j >= 0; j--) {
-			// for n from 1 to 16
-			// Ln = Rn-1
-			// Rn =  Utils.computeXOR(Ln-1,f(Rn-1,Kn))
-			String Ln = Rn_minus_1;
-			String Rn;
 
-			// computation of f(Rn-1,Kn)
-			String fn = "";
-			String e_Rn_minus_1 = "";
+			String[] RnLn = performRounds(keys, Ln_minus_1, Rn_minus_1, j);
+			String Ln = RnLn[0];
+			String Rn = RnLn[1];
 
-			// Apply Expansion table E to expand Rn-1
-			for (int i = 0; i < E.length; i++) {
-				e_Rn_minus_1 += Rn_minus_1.charAt(E[i]-1);
-			}
-			//Compute XOR of E(Rn-1) and Kn
-			//Divide the resulting string into 8 substrings of length 6
-			String[] b = new String[8];
-
-			String XOR_result = Utils.computeXOR(e_Rn_minus_1, keys[j]);
-
-//			for(int i = 0; i < 8; i++) {
-//				b[i] = XOR_result.substring((i*6),((i+1)*6));
-//			}
-
-			b = Utils.splitEqually(XOR_result, 6);
-
-			int[][][] s = new int[][][]{s1, s2, s3, s4, s5, s6, s7, s8};
-
-			// for i from 0 to 7
-			//convert b[i][0]b[i][5] into a decimal row
-			//convert b[i][1]b[i][2]b[i]30]b[i][4] into a decimal column
-
-//			System.out.println(Arrays.toString(b));
-
-			String[] s_b = new String[8];
-
-			for(int i = 0; i < 8; i++) {
-				s_b[i] = Integer.toBinaryString(
-						s[i]
-						[Integer.parseInt(b[i].charAt(0) + "" + b[i].charAt(5),2)]
-						[Integer.parseInt(b[i].charAt(1) + "" + b[i].charAt(2) + "" + b[i].charAt(3) + "" + b[i].charAt(4) ,2)]
-				);
-			}
-
-			//transform si[row][column] into a binary number of 4 bits
-			//compute S by merging s1(b[0])...s8(b[7])
-
-
-			String S = "";
-
-			for(int i = 0; i < s_b.length; i++) {
-
-				while(s_b[i].length() < 4)
-					s_b[i] = "0" + s_b[i];
-
-				S += s_b[i];
-			}
-
-			//compute f(Rn-1,Kn) by permuting S using p
-			for (int i = 0; i < p.length; i++) {
-				fn += S.charAt(p[i]-1);
-			}
-
-			Rn = Utils.computeXOR(Ln_minus_1,fn);
-
-			L[j] = Ln;
-			R[j] = Rn;
-
-			Ln_minus_1 = Ln;
 			Rn_minus_1 = Rn;
+			Ln_minus_1 = Ln;
+
 		}
 
 //------------------------------
 
 		//merge R16 and L16 (R16 first)
-		String RL16 = R[15] + L[15];
+		String RL16 = Rn_minus_1 + Ln_minus_1;
 		// Apply Final Permutation FP
-		for (int i = 0; i < FP.length; i++) {
-			cyphertext += RL16.charAt(FP[i] -1);
-		}
+		cyphertext = performPermutation(FP, RL16);
 
 		return cyphertext;
-
 	}
 
+	private static String[] performRounds(String[] keys, String Ln_minus_1, String Rn_minus_1, int j) {
+		// for n from 1 to 16
+		// Ln = Rn-1
+		// Rn =  Utils.computeXOR(Ln-1,f(Rn-1,Kn))
+		String Ln = Rn_minus_1;
+		String Rn;
+
+		// computation of f(Rn-1,Kn)
+		String fn = "";
+		String e_Rn_minus_1 = "";
+
+		// Apply Expansion table E to expand Rn-1
+		e_Rn_minus_1 = performPermutation(E, Rn_minus_1);
+		//Compute XOR of E(Rn-1) and Kn
+
+		//Divide the resulting string into 8 substrings of length 6
+		String XOR_result = Utils.computeXOR(e_Rn_minus_1, keys[j]);
+		String[] b = Utils.splitEqually(XOR_result, 6);
+
+		int[][][] s = new int[][][]{s1, s2, s3, s4, s5, s6, s7, s8};
+
+		// for i from 0 to 7
+		//convert b[i][0]b[i][5] into a decimal row
+		//convert b[i][1]b[i][2]b[i]30]b[i][4] into a decimal column
+
+		String[] s_b = new String[8];
+
+		for(int i = 0; i < 8; i++) {
+			s_b[i] = Integer.toBinaryString(
+					s[i]
+							[Integer.parseInt(b[i].charAt(0) + "" + b[i].charAt(5),2)]
+							[Integer.parseInt(b[i].charAt(1) + "" + b[i].charAt(2) + "" + b[i].charAt(3) + "" + b[i].charAt(4) ,2)]
+			);
+		}
+
+		//transform si[row][column] into a binary number of 4 bits
+		//compute S by merging s1(b[0])...s8(b[7])
+		String S = "";
+
+		for(int i = 0; i < s_b.length; i++) {
+
+			while(s_b[i].length() < 4)
+				s_b[i] = "0" + s_b[i];
+
+			S += s_b[i];
+		}
+
+		//compute f(Rn-1,Kn) by permuting S using p
+		fn = performPermutation(p, S);
+		Rn = Utils.computeXOR(Ln_minus_1,fn);
+
+		return new String[]{Ln, Rn};
+	}
 
 }

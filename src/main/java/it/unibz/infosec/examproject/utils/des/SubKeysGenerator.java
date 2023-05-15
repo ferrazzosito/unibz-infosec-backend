@@ -74,8 +74,4 @@ public class SubKeysGenerator {
 		return keys;
 	}
 
-//	public static void main(String[] args) {
-//
-//		System.out.println(Arrays.toString(generateSubKeys("0001001100110100010101110111100110011011101111001101111111110001")));
-//	}
 }
