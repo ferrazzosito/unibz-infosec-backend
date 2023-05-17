@@ -1,5 +1,8 @@
-package it.unibz.infosec.examproject.utils.des;
+package it.unibz.infosec.examproject.util.crypto.des;
 
+import it.unibz.infosec.examproject.util.crypto.des.BlockEncoder;
+import it.unibz.infosec.examproject.util.crypto.des.DES;
+import it.unibz.infosec.examproject.util.crypto.des.SubKeysGenerator;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

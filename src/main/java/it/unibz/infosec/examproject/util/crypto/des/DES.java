@@ -1,4 +1,4 @@
-package it.unibz.infosec.examproject.utils.des;
+package it.unibz.infosec.examproject.util.crypto.des;
 
 public class DES {
 
@@ -192,8 +192,8 @@ public class DES {
 		//Compute XOR of E(Rn-1) and Kn
 
 		//Divide the resulting string into 8 substrings of length 6
-		String XOR_result = Utils.computeXOR(e_Rn_minus_1, keys[j]);
-		String[] b = Utils.splitEqually(XOR_result, 6);
+		String XOR_result = DESUtils.computeXOR(e_Rn_minus_1, keys[j]);
+		String[] b = DESUtils.splitEqually(XOR_result, 6);
 
 		int[][][] s = new int[][][]{s1, s2, s3, s4, s5, s6, s7, s8};
 
@@ -225,7 +225,7 @@ public class DES {
 
 		//compute f(Rn-1,Kn) by permuting S using p
 		fn = performPermutation(p, S);
-		Rn = Utils.computeXOR(Ln_minus_1,fn);
+		Rn = DESUtils.computeXOR(Ln_minus_1,fn);
 
 		return new String[]{Ln, Rn};
 	}

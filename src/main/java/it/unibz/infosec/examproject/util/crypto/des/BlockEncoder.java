@@ -1,4 +1,4 @@
-package it.unibz.infosec.examproject.utils.des;
+package it.unibz.infosec.examproject.util.crypto.des;
 
 public class BlockEncoder {
 

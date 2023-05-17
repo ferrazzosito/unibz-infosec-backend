@@ -1,4 +1,4 @@
-package it.unibz.infosec.examproject.utils.des;
+package it.unibz.infosec.examproject.util.crypto.des;
 
 public class SubKeysGenerator {
 
@@ -52,8 +52,8 @@ public class SubKeysGenerator {
 		//for i from 0 to 15 compute key[i]
 
 		for(int i = 1; i <= KEY_SHIFTS.length; i++) {
-			Cn[i] = Utils.cyclicLeftShift(Cn[i-1], KEY_SHIFTS[i-1]);
-			Dn[i] = Utils.cyclicLeftShift(Dn[i-1], KEY_SHIFTS[i-1]);
+			Cn[i] = DESUtils.cyclicLeftShift(Cn[i-1], KEY_SHIFTS[i-1]);
+			Dn[i] = DESUtils.cyclicLeftShift(Dn[i-1], KEY_SHIFTS[i-1]);
 		}
 
 		// Merge the two halves into 56-bit merged

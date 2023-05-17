@@ -1,6 +1,6 @@
-package it.unibz.infosec.examproject.utils.des;
+package it.unibz.infosec.examproject.util.crypto.des;
 
-public class Utils {
+public class DESUtils {
 
 	public static String cyclicLeftShift(String s, int k){
 	    k = k%s.length();
