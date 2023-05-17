@@ -2,6 +2,7 @@ package it.unibz.infosec.examproject.util.crypto.rsa;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 
 public class RSA {
@@ -25,7 +26,15 @@ public class RSA {
         return new BigInteger(cleartext).modPow(e, n).toByteArray();
     }
 
+    public static byte[] encrypt(String payload, BigInteger e, BigInteger n) {
+        return encrypt(payload.getBytes(StandardCharsets.UTF_8), e, n);
+    }
+
     public static byte[] decrypt(byte[] ciphertext, BigInteger d, BigInteger n) {
         return new BigInteger(ciphertext).modPow(d, n).toByteArray();
+    }
+
+    public static String decryptToString(byte[] ciphertext, BigInteger d, BigInteger n) {
+        return new String(decrypt(ciphertext, d, n), StandardCharsets.UTF_8);
     }
 }

@@ -3,8 +3,7 @@ package it.unibz.infosec.examproject.util.crypto.rsa;
 import java.math.BigInteger;
 
 public class RSAKeyPair {
-
-    public final BigInteger d;
+    private final BigInteger d;
     private final BigInteger e;
     private final BigInteger n;
 
