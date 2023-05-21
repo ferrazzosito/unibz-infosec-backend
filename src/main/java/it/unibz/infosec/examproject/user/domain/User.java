@@ -2,6 +2,8 @@ package it.unibz.infosec.examproject.user.domain;
 
 import jakarta.persistence.*;
 
+import java.math.BigInteger;
+
 @Entity
 @Table(name = "managed_user")
 public class User {
@@ -16,12 +18,21 @@ public class User {
 
     private String salt;
 
+    private BigInteger publicKey;
+
+    private BigInteger privateKey;
+
+    private BigInteger nKey;
+
     private int balance;
 
     private int type;
 
     public User() {}
-    public User(String email, String password, String salt, int balance, int type) {
+    public User(String email, String password, String salt, BigInteger privateKey, BigInteger publicKey, BigInteger nKey, int balance, int type) {
+        this.publicKey = publicKey;
+        this.privateKey = privateKey;
+        this.nKey = nKey;
         this.email = email;
         this.password = password;
         this.salt = salt;
@@ -55,5 +66,17 @@ public class User {
 
     public int getType() {
         return type;
+    }
+
+    public BigInteger getPublicKey() {
+        return publicKey;
+    }
+
+    public BigInteger getPrivateKey() {
+        return privateKey;
+    }
+
+    public BigInteger getNKey () {
+        return nKey;
     }
 }

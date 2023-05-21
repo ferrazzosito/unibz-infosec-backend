@@ -5,13 +5,15 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class Hashing {
+
+    private static final String HASH_ALGORITHM = "SHA256";
     
-    public static String getDigest(String inputString, String hashAlgorithm) {
+    public static String getDigest(String inputString) {
         final MessageDigest md;
         try {
-            md = MessageDigest.getInstance(hashAlgorithm);
+            md = MessageDigest.getInstance(HASH_ALGORITHM);
         } catch (NoSuchAlgorithmException e) {
-            throw new IllegalArgumentException("No such algorithm " + hashAlgorithm);
+            throw new IllegalArgumentException("No such algorithm " + HASH_ALGORITHM);
         }
         md.update(inputString.getBytes(StandardCharsets.UTF_8));
 

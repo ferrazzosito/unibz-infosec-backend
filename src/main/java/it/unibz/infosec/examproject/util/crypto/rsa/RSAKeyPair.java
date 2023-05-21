@@ -7,6 +7,8 @@ public class RSAKeyPair {
     private final BigInteger e;
     private final BigInteger n;
 
+    //TODO: consider to create a class key to save the couples of keys, that is (n,d) and (n,e)
+
     public RSAKeyPair(BigInteger n, BigInteger e, BigInteger d) {
         this.n = n;
         this.e = e;

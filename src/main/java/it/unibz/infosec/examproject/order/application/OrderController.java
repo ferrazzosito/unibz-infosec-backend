@@ -15,6 +15,8 @@ public class OrderController {
     private final ManageOrders manageOrders;
     private final SearchOrders searchOrders;
 
+    //TODO: offer a method to check digital signature and approve order
+
     @Autowired
     public OrderController (ManageOrders manageOrders, SearchOrders searchOrders) {
         this.manageOrders = manageOrders;
