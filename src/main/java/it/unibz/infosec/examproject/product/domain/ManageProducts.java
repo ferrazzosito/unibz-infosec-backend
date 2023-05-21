@@ -1,5 +1,6 @@
 package it.unibz.infosec.examproject.product.domain;
 
+import it.unibz.infosec.examproject.user.domain.ManageUsers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,37 +10,29 @@ import java.util.Optional;
 @Service
 public class ManageProducts {
 
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
     private SearchProducts searchProducts;
+    private final ManageUsers manageUsers;
 
     @Autowired
-    public ManageProducts(ProductRepository productRepository) {
+    public ManageProducts(ProductRepository productRepository, ManageUsers manageUsers) {
         this.productRepository = productRepository;
+        this.manageUsers = manageUsers;
     }
 
     private Product validateProduct (Long id) {
-
-        Optional<Product> maybeProduct = productRepository.findById(id);
-
-        if(maybeProduct.isEmpty())
+        final Optional<Product> maybeProduct = productRepository.findById(id);
+        if (maybeProduct.isEmpty())
             throw new IllegalArgumentException("Product with id '" + id + "' does not exist yet!");
-
         return maybeProduct.get();
     }
 
     public Product createProduct(String name, int cost, Long vendorId) {
-
-        //TODO: check that vendorId is valid
-
-        return productRepository.save(new Product(name, cost, vendorId));
+        return productRepository.save(new Product(name, cost, manageUsers.readUser(vendorId).getId()));
     }
 
     public Product readProduct(Long id) {
-
-        Product product = validateProduct(id);
-
-        return product;
-
+        return validateProduct(id);
     }
 
     public Product updateProduct (Long id, String name, int cost) {

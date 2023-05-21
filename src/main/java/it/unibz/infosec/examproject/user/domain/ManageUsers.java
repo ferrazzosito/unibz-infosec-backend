@@ -1,5 +1,7 @@
 package it.unibz.infosec.examproject.user.domain;
 
+import it.unibz.infosec.examproject.util.crypto.RandomUtils;
+import it.unibz.infosec.examproject.util.crypto.hashing.Hashing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,10 +29,9 @@ public class ManageUsers {
     }
 
     public User createUser(String email, String password, int type) {
-
-        //TODO: hash password, generate salt,...
-
-        return userRepository.save(new User(email, password, "sds", 0, type));
+        final String salt = RandomUtils.generateRandomSalt(32);
+        final String hashedPassword = Hashing.getDigest(password + salt, "SHA256");
+        return userRepository.save(new User(email, hashedPassword, salt, 0, type));
     }
 
     public User readUser(Long id) {

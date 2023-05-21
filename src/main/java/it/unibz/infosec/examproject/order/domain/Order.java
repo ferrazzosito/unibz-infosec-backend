@@ -1,9 +1,9 @@
 package it.unibz.infosec.examproject.order.domain;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "managed_order")
 public class Order {
 
     @Id

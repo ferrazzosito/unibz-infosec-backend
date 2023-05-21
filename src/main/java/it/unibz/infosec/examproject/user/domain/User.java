@@ -3,6 +3,7 @@ package it.unibz.infosec.examproject.user.domain;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "managed_user")
 public class User {
 
     @Id
