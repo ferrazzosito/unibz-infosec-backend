@@ -30,11 +30,11 @@ public class ManageUsers {
         return maybeUser.get();
     }
 
-    public User createUser(String email, String password, int type) {
+    public User createUser(String email, String password, int userRole) {
         final String salt = RandomUtils.generateRandomSalt(32);
         final String hashedPassword = Hashing.getDigest(password + salt);
         final RSAKeyPair keyPair = RSA.generateKeys();
-        return userRepository.save(new User(email, hashedPassword, salt, keyPair.getPrivateExponent(), keyPair.getPublicExponent(), keyPair.getN(),0, type));
+        return userRepository.save(new User(email, hashedPassword, salt, keyPair.getPrivateExponent(), keyPair.getPublicExponent(), keyPair.getN(),0, userRole));
     }
 
     public User readUser(Long id) {

@@ -1,9 +1,15 @@
 package it.unibz.infosec.examproject.user.domain;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.math.BigInteger;
+import java.util.Collection;
+import java.util.Collections;
 
+@EqualsAndHashCode
 @Entity
 @Table(name = "managed_user")
 public class User {
@@ -24,12 +30,13 @@ public class User {
 
     private BigInteger nKey;
 
-    private int balance;
+    private Integer balance;
 
-    private int type;
+    private Integer userRole;
 
     public User() {}
-    public User(String email, String password, String salt, BigInteger privateKey, BigInteger publicKey, BigInteger nKey, int balance, int type) {
+    public User(String email, String password, String salt, BigInteger privateKey, BigInteger publicKey,
+                BigInteger nKey, int balance, int userRole) {
         this.publicKey = publicKey;
         this.privateKey = privateKey;
         this.nKey = nKey;
@@ -37,7 +44,7 @@ public class User {
         this.password = password;
         this.salt = salt;
         this.balance = balance;
-        this.type = type;
+        this.userRole = userRole;
     }
 
     public Long getId() {
@@ -64,9 +71,7 @@ public class User {
         return balance;
     }
 
-    public int getType() {
-        return type;
-    }
+    public int getUserRole () { return userRole; }
 
     public BigInteger getPublicKey() {
         return publicKey;
@@ -79,4 +84,5 @@ public class User {
     public BigInteger getNKey () {
         return nKey;
     }
+
 }

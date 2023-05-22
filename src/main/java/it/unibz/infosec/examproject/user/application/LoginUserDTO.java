@@ -8,9 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
-public class CreateUserDTO {
+public class LoginUserDTO {
 
     private String email;
     private String password;
-    private int userRole;
 }

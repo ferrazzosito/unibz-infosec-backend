@@ -9,8 +9,8 @@ public class UpdateUserDTO extends CreateUserDTO {
 
     public UpdateUserDTO(Long id, String email, String password, String salt, int balance, int type){
 
-        super(email, password, salt, balance, type);
-        this.id=id;
+//        super(email, password, salt, type);
+        //TODO: to be fixed
     }
 
     public Long getId(){return id;}
