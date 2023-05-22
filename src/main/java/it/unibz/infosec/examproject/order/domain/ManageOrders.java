@@ -11,7 +11,7 @@ import java.util.Optional;
 @Service
 public class ManageOrders {
 
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
     private SearchOrders searchOrders;
 
     @Autowired

@@ -1,9 +1,7 @@
 package it.unibz.infosec.examproject.user.domain;
 
-import it.unibz.infosec.examproject.chat.domain.Chat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-
-import java.util.List;
 
 @Entity
 @Table(name = "managed_user")
@@ -15,10 +13,13 @@ public class User {
 
     private String email;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String salt;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private int balance;
 
     private int type;

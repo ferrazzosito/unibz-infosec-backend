@@ -1,6 +1,7 @@
 package it.unibz.infosec.examproject.config;
 
 import it.unibz.infosec.examproject.chat.application.ChatHandler;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -19,7 +20,7 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(@NonNull WebSocketHandlerRegistry registry) {
-        registry.addHandler(new ChatHandler(), "/chat/*").addInterceptors(new HandshakeInterceptor() {
+        registry.addHandler(getChatHandler(), "/chat/*").addInterceptors(new HandshakeInterceptor() {
             @Override
             public boolean beforeHandshake(@NonNull ServerHttpRequest request,
                                            @NonNull ServerHttpResponse response,
@@ -38,5 +39,10 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
                                        Exception exception) {
             }
         }).setAllowedOrigins("*");
+    }
+
+    @Bean
+    public ChatHandler getChatHandler() {
+        return new ChatHandler();
     }
 }

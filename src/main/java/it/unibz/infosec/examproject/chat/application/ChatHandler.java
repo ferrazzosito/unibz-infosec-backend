@@ -1,7 +1,9 @@
 package it.unibz.infosec.examproject.chat.application;
 
-import org.springframework.data.util.Pair;
+import it.unibz.infosec.examproject.chat.domain.ManageChatRequests;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -11,15 +13,28 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+@Component
 public class ChatHandler extends TextWebSocketHandler {
 
+    private static final Logger logger = Logger.getLogger("ChatHandler");
+
     private final Map<String, List<WebSocketSession>> sessions = new HashMap<>();
+    @Autowired
+    private ManageChatRequests manageChatRequests;
+
+    public ChatHandler() {
+    }
 
     @Override
     public void afterConnectionEstablished(@NonNull WebSocketSession session) throws Exception {
-        final String chatId = (String) session.getAttributes().get("chat_id");
-        if (chatId == null) {
+        final String chatId;
+        try {
+            chatId = ensureValidChatId(session);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "invalid chat id " + session.getAttributes().get("chat_id"), e);
             session.close();
             return;
         }
@@ -33,9 +48,10 @@ public class ChatHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(@NonNull WebSocketSession session, @NonNull CloseStatus status) throws Exception {
-        final String chatId = (String) session.getAttributes().get("chat_id");
-        if (chatId == null) {
-            session.close();
+        final String chatId;
+        try {
+            chatId = ensureValidChatId(session);
+        } catch (Exception e) {
             return;
         }
         final List<WebSocketSession> sockets = this.sessions.get(chatId);
@@ -52,8 +68,11 @@ public class ChatHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(@NonNull WebSocketSession session, @NonNull TextMessage message) throws Exception {
-        final String chatId = (String) session.getAttributes().get("chat_id");
-        if (chatId == null) {
+        final String chatId;
+        try {
+            chatId = ensureValidChatId(session);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "invalid chat id " + session.getAttributes().get("chat_id"), e);
             session.close();
             return;
         }
@@ -63,5 +82,14 @@ public class ChatHandler extends TextWebSocketHandler {
                 recipient.sendMessage(message);
             }
         }
+    }
+
+    private String ensureValidChatId(@NonNull WebSocketSession session) throws Exception {
+        final String chatId = (String) session.getAttributes().get("chat_id");
+        if (chatId == null) {
+            session.close();
+            throw new IllegalStateException("No chat id associated with the given WebSocketSession.");
+        }
+        return this.manageChatRequests.findByChatId(chatId).getChatId();
     }
 }

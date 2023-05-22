@@ -2,6 +2,7 @@ package it.unibz.infosec.examproject.chat.domain;
 
 import it.unibz.infosec.examproject.user.domain.User;
 import jakarta.persistence.*;
+import java.util.UUID;
 
 @Entity
 public class ChatRequest {
@@ -19,6 +20,15 @@ public class ChatRequest {
     private User customer;
 
     private String chatId;
+
+    public ChatRequest() {
+    }
+
+    public ChatRequest(User vendor, User customer) {
+        this.vendor = vendor;
+        this.customer = customer;
+        this.chatId = UUID.randomUUID().toString();
+    }
 
     public Long getId() {
         return id;
