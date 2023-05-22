@@ -1,6 +1,9 @@
 package it.unibz.infosec.examproject.user.domain;
 
+import it.unibz.infosec.examproject.chat.domain.Chat;
 import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 @Table(name = "managed_user")
