@@ -34,6 +34,7 @@ public class ManageUsers {
         final String salt = RandomUtils.generateRandomSalt(32);
         final String hashedPassword = Hashing.getDigest(password + salt);
         final RSAKeyPair keyPair = RSA.generateKeys();
+        System.out.println(keyPair.getN());
         return userRepository.save(new User(email, hashedPassword, salt, keyPair.getPrivateExponent(), keyPair.getPublicExponent(), keyPair.getN(),0, type));
     }
 
