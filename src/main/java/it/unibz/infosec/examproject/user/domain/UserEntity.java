@@ -1,18 +1,30 @@
 package it.unibz.infosec.examproject.user.domain;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "managed_user")
-public class User {
+@Table(name = "users")
+@Data
+@NoArgsConstructor
+public class UserEntity {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String email;
+
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name="user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name="role_id", referencedColumnName = "id"))
+    private List<Role> role = new ArrayList<>();
 
     private String password;
 
@@ -26,10 +38,8 @@ public class User {
 
     private int balance;
 
-    private int type;
 
-    public User() {}
-    public User(String email, String password, String salt, BigInteger privateKey, BigInteger publicKey, BigInteger nKey, int balance, int type) {
+    public UserEntity(String email, String password, String salt, BigInteger privateKey, BigInteger publicKey, BigInteger nKey, int balance) {
         this.publicKey = publicKey;
         this.privateKey = privateKey;
         this.nKey = nKey;
@@ -37,7 +47,6 @@ public class User {
         this.password = password;
         this.salt = salt;
         this.balance = balance;
-        this.type = type;
     }
 
     public Long getId() {
@@ -64,8 +73,12 @@ public class User {
         return balance;
     }
 
-    public int getType() {
-        return type;
+    public List<Role> getRole() {
+        return role;
+    }
+
+    public void setRole(List<Role> role) {
+        this.role = role;
     }
 
     public BigInteger getPublicKey() {

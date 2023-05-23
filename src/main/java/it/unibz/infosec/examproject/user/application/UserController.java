@@ -2,7 +2,7 @@ package it.unibz.infosec.examproject.user.application;
 
 import it.unibz.infosec.examproject.user.domain.ManageUsers;
 import it.unibz.infosec.examproject.user.domain.SearchUsers;
-import it.unibz.infosec.examproject.user.domain.User;
+import it.unibz.infosec.examproject.user.domain.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,27 +22,27 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User findById(@PathVariable("id") Long id) {
+    public UserEntity findById(@PathVariable("id") Long id) {
         return manageUsers.readUser(id);
     }
 
     @PostMapping("/create")
-    public User createNewUser(@RequestBody CreateUserDTO dto) {
-        return manageUsers.createUser(dto.getEmail(), dto.getPassword(), dto.getType());
+    public UserEntity createNewUser(@RequestBody CreateUserDTO dto) {
+        return manageUsers.createUser(dto.getEmail(), dto.getPassword());
     }
 
     @PostMapping("/update/{id}")
-    public User updateUser(@PathVariable("id") Long id,@RequestBody UpdateUserDTO dto){
+    public UserEntity updateUser(@PathVariable("id") Long id, @RequestBody UpdateUserDTO dto){
         return manageUsers.updateUser(id, dto.getBalance()); //?
     }
 
     @DeleteMapping("/delete/{id}")
-    public User deleteUser(@PathVariable("id") Long id)  {
+    public UserEntity deleteUser(@PathVariable("id") Long id)  {
         return manageUsers.deleteUser(id);
     }
 
     @GetMapping("/getAll")
-    public List<User> findAll(){
+    public List<UserEntity> findAll(){
         return searchUsers.findAll();
     }
 
