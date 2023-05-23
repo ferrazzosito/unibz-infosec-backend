@@ -7,6 +7,8 @@ import it.unibz.infosec.examproject.util.crypto.rsa.RSAKeyPair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,11 +32,11 @@ public class ManageUsers {
         return maybeUser.get();
     }
 
-    public UserEntity createUser(String email, String password) {
+    public UserEntity createUser(String email, String password, List<Role> roles) {
         final String salt = RandomUtils.generateRandomSalt(32);
         final String hashedPassword = Hashing.getDigest(password + salt);
         final RSAKeyPair keyPair = RSA.generateKeys();
-        return userRepository.save(new UserEntity(email, hashedPassword, salt, keyPair.getPrivateExponent(), keyPair.getPublicExponent(), keyPair.getN(),0));
+        return userRepository.save(new UserEntity(email, hashedPassword, salt, keyPair.getPrivateExponent(), keyPair.getPublicExponent(), keyPair.getN(),0, roles));
     }
 
     public UserEntity readUser(Long id) {

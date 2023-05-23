@@ -39,7 +39,7 @@ public class UserEntity {
     private int balance;
 
 
-    public UserEntity(String email, String password, String salt, BigInteger privateKey, BigInteger publicKey, BigInteger nKey, int balance) {
+    public UserEntity(String email, String password, String salt, BigInteger privateKey, BigInteger publicKey, BigInteger nKey, int balance, List<Role> roles) {
         this.publicKey = publicKey;
         this.privateKey = privateKey;
         this.nKey = nKey;
@@ -47,6 +47,7 @@ public class UserEntity {
         this.password = password;
         this.salt = salt;
         this.balance = balance;
+        this.roles = roles;
     }
 
     public Long getId() {

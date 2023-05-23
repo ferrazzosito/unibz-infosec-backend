@@ -26,10 +26,10 @@ public class UserController {
         return manageUsers.readUser(id);
     }
 
-    @PostMapping("/create")
-    public UserEntity createNewUser(@RequestBody CreateUserDTO dto) {
-        return manageUsers.createUser(dto.getEmail(), dto.getPassword());
-    }
+//    @PostMapping("/create")
+//    public UserEntity createNewUser(@RequestBody CreateUserDTO dto) {
+//        return manageUsers.createUser(dto.getEmail(), dto.getPassword());
+//    }
 
     @PostMapping("/update/{id}")
     public UserEntity updateUser(@PathVariable("id") Long id, @RequestBody UpdateUserDTO dto){
