@@ -24,7 +24,7 @@ public class UserEntity {
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name="user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name="role_id", referencedColumnName = "id"))
-    private List<Role> role = new ArrayList<>();
+    private List<Role> roles = new ArrayList<>();
 
     private String password;
 
@@ -73,12 +73,12 @@ public class UserEntity {
         return balance;
     }
 
-    public List<Role> getRole() {
-        return role;
+    public List<Role> getRoles() {
+        return roles;
     }
 
-    public void setRole(List<Role> role) {
-        this.role = role;
+    public void setRoles(List<Role> role) {
+        this.roles = role;
     }
 
     public BigInteger getPublicKey() {
