@@ -13,8 +13,8 @@ public interface ChatRequestRepository extends JpaRepository<ChatRequest, Long> 
     @NonNull
     Optional<ChatRequest> findById(@NonNull Long id);
 
-    List<ChatRequest> findByVendor(Long id);
-
     @NonNull
     List<ChatRequest> findByChatId(@NonNull String id);
+
+    List<ChatRequest> findByVendor(Long id);
 }

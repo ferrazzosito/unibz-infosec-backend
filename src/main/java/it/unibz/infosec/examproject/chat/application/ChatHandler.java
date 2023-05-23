@@ -19,8 +19,6 @@ import java.util.logging.Logger;
 @Component
 public class ChatHandler extends TextWebSocketHandler {
 
-    private static final Logger logger = Logger.getLogger("ChatHandler");
-
     private final Map<String, List<WebSocketSession>> sessions = new HashMap<>();
     @Autowired
     private ManageChatRequests manageChatRequests;
@@ -34,7 +32,6 @@ public class ChatHandler extends TextWebSocketHandler {
         try {
             chatId = ensureValidChatId(session);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "invalid chat id " + session.getAttributes().get("chat_id"), e);
             session.close();
             return;
         }
@@ -72,7 +69,6 @@ public class ChatHandler extends TextWebSocketHandler {
         try {
             chatId = ensureValidChatId(session);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "invalid chat id " + session.getAttributes().get("chat_id"), e);
             session.close();
             return;
         }
