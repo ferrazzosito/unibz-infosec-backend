@@ -2,17 +2,13 @@ package it.unibz.infosec.examproject.order.domain;
 
 import it.unibz.infosec.examproject.product.domain.ManageProducts;
 import it.unibz.infosec.examproject.product.domain.Product;
-import it.unibz.infosec.examproject.product.domain.ProductRepository;
-import it.unibz.infosec.examproject.product.domain.SearchProducts;
 import it.unibz.infosec.examproject.user.domain.ManageUsers;
-import it.unibz.infosec.examproject.user.domain.User;
-import it.unibz.infosec.examproject.user.domain.UserRepository;
+import it.unibz.infosec.examproject.user.domain.UserEntity;
 import it.unibz.infosec.examproject.util.crypto.hashing.Hashing;
 import it.unibz.infosec.examproject.util.crypto.rsa.RSA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
 import java.util.Optional;
 
 @Service
@@ -41,7 +37,7 @@ public class ManageOrders {
     }
 
     public Order createOrder(Long productId, Long clientId) {
-        User client = manageUsers.readUser(clientId);
+        UserEntity client = manageUsers.readUser(clientId);
         Product product = manageProducts.readProduct(productId);
 
         String orderDocument =
@@ -70,7 +66,7 @@ public class ManageOrders {
 
     public boolean isSignatureOrderValid(Long idOrder) {
         Order order = readOrder(idOrder);
-        User client = manageUsers.readUser(order.getClientId());
+        UserEntity client = manageUsers.readUser(order.getClientId());
         byte[] DSA = order.getDSA();
         String retrievedDigest = RSA.decryptToString(DSA, client.getPublicKey(), client.getNKey());
         String computedDigest = Hashing.getDigest(order.getOrderDocument());

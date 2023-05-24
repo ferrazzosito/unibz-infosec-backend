@@ -1,21 +1,21 @@
 package it.unibz.infosec.examproject.user.application;
 
+
 public class CreateUserDTO {
 
     private String email;
     private String password;
     private String salt;
     private int balance;
-    private int type;
 
     public CreateUserDTO() {}
 
-    public CreateUserDTO(String email, String password, String salt, int balance, int type) {
+    //TODO:aggiungere role (ma solo Client o Vendor)
+    public CreateUserDTO(String email, String password, String salt, int balance) {
         this.email = email;
         this.password = password;
         this.salt = salt;
         this.balance = balance;
-        this.type = type;
     }
 
     public String getEmail() {
@@ -50,11 +50,4 @@ public class CreateUserDTO {
         this.balance = balance;
     }
 
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
 }
