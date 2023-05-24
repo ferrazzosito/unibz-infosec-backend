@@ -22,6 +22,8 @@ public class SecurityConfig {
 
     private CustomUserDetailsService customUserDetailsService;
 
+//    private SaltPasswordEncoder passwordEncoder;
+
     @Autowired
     public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
         this.customUserDetailsService = customUserDetailsService;
@@ -47,7 +49,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    PasswordEncoder passwordEncoder () {
+    public PasswordEncoder passwordEncoder () {
         return new SaltPasswordEncoder();
     }
 }
