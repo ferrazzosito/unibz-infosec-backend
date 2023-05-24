@@ -1,5 +1,6 @@
 package it.unibz.infosec.examproject.user.auth;
 
+import it.unibz.infosec.examproject.security.JwtGenerator;
 import it.unibz.infosec.examproject.user.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,13 +27,15 @@ public class AuthController {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private ManageUsers manageUsers;
+    private JwtGenerator jwtGenerator;
 
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, ManageUsers manageUsers) {
+    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, ManageUsers manageUsers, JwtGenerator jwtGenerator) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.manageUsers = manageUsers;
+        this.jwtGenerator = jwtGenerator;
     }
 
     @PostMapping("/register")
@@ -48,13 +51,16 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDTO loginDTO) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDTO.getEmail(),
                         loginDTO.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseEntity<>("User signed success!", HttpStatus.OK);
+
+        String token = jwtGenerator.generateToken(authentication);
+
+        return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
     }
 }
