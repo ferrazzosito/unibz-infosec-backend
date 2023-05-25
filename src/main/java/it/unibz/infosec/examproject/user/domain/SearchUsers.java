@@ -16,8 +16,8 @@ public class SearchUsers {
         this.userRepository = userRepository;
     }
 
-    public User findById(Long id) {
-        Optional<User> searchedUser = userRepository.findById(id);
+    public UserEntity findById(Long id) {
+        Optional<UserEntity> searchedUser = userRepository.findById(id);
 
         if(searchedUser.isEmpty()){
             throw new IllegalArgumentException("User with id " + id + " is not present in the database");
@@ -25,8 +25,8 @@ public class SearchUsers {
         return searchedUser.get();
     }
 
-    public List<User> findAll(){
-        List<User> list = userRepository.findAll();
+    public List<UserEntity> findAll(){
+        List<UserEntity> list = userRepository.findAll();
         if(list.isEmpty()){
             throw new IllegalArgumentException("No users in database");
         }

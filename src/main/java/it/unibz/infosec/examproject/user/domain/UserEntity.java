@@ -2,12 +2,18 @@ package it.unibz.infosec.examproject.user.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "managed_user")
-public class User {
+@Table(name = "users")
+@Data
+@NoArgsConstructor
+public class UserEntity {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -15,12 +21,13 @@ public class User {
 
     private String email;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private int balance;
-
     private int type;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name="user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name="role_id", referencedColumnName = "id"))
+    private List<Role> roles = new ArrayList<>();
+
     private String password;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -33,8 +40,10 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private BigInteger privateKey;
 
-    public User() {}
-    public User(String email, String password, String salt, BigInteger privateKey, BigInteger publicKey, BigInteger nKey, int balance, int type) {
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private int balance;
+
+    public UserEntity(String email, String password, String salt, BigInteger privateKey, BigInteger publicKey, BigInteger nKey, int balance, List<Role> roles) {
         this.publicKey = publicKey;
         this.privateKey = privateKey;
         this.nKey = nKey;
@@ -42,7 +51,7 @@ public class User {
         this.password = password;
         this.salt = salt;
         this.balance = balance;
-        this.type = type;
+        this.roles = roles;
     }
 
     public Long getId() {
@@ -61,7 +70,7 @@ public class User {
         return salt;
     }
 
-    public int addToBalance (int amount) {
+    public int addToBalance(int amount) {
         balance += amount;
         return getBalance();
     }
@@ -69,8 +78,12 @@ public class User {
         return balance;
     }
 
-    public int getType() {
-        return type;
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> role) {
+        this.roles = role;
     }
 
     public BigInteger getPublicKey() {

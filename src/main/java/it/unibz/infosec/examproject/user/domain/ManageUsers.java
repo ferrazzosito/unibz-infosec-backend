@@ -7,6 +7,8 @@ import it.unibz.infosec.examproject.util.crypto.rsa.RSAKeyPair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,9 +22,9 @@ public class ManageUsers {
         this.userRepository = userRepository;
     }
 
-    private User validateUser (Long id) {
+    private UserEntity validateUser (Long id) {
 
-        Optional<User> maybeUser = userRepository.findById(id);
+        Optional<UserEntity> maybeUser = userRepository.findById(id);
 
         if(maybeUser.isEmpty())
             throw new IllegalArgumentException("User with id '" + id + "' does not exist yet!");
@@ -30,37 +32,39 @@ public class ManageUsers {
         return maybeUser.get();
     }
 
-    public User createUser(String email, String password, int type) {
+    public UserEntity createUser(String email, String password, List<Role> roles) {
+
         final String salt = RandomUtils.generateRandomSalt(32);
         final String hashedPassword = Hashing.getDigest(password + salt);
+
         final RSAKeyPair keyPair = RSA.generateKeys();
-        return userRepository.save(new User(email, hashedPassword, salt, keyPair.getPrivateExponent(), keyPair.getPublicExponent(), keyPair.getN(),0, type));
+        return userRepository.save(new UserEntity(email, hashedPassword, salt, keyPair.getPrivateExponent(), keyPair.getPublicExponent(), keyPair.getN(),0, roles));
     }
 
-    public User readUser(Long id) {
+    public UserEntity readUser(Long id) {
 
-        User user = validateUser(id);
+        UserEntity userEntity = validateUser(id);
 
-        return user;
+        return userEntity;
 
     }
 
-    public User updateUser (Long id, int amountToAdd) {
+    public UserEntity updateUser (Long id, int amountToAdd) {
 
-        User user = validateUser(id);
+        UserEntity userEntity = validateUser(id);
 
-        user.addToBalance(amountToAdd);
+        userEntity.addToBalance(amountToAdd);
 
-        return userRepository.save(user);
+        return userRepository.save(userEntity);
     }
 
-    public User deleteUser (Long id) {
+    public UserEntity deleteUser (Long id) {
 
-        User user = validateUser(id);
+        UserEntity userEntity = validateUser(id);
 
-        userRepository.delete(user);
+        userRepository.delete(userEntity);
 
-        return user;
+        return userEntity;
     }
 
 }
