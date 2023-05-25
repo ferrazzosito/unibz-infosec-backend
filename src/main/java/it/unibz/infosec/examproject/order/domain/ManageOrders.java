@@ -1,8 +1,11 @@
 package it.unibz.infosec.examproject.order.domain;
 
+import it.unibz.infosec.examproject.product.domain.ManageProducts;
 import it.unibz.infosec.examproject.product.domain.Product;
-import it.unibz.infosec.examproject.product.domain.ProductRepository;
-import it.unibz.infosec.examproject.product.domain.SearchProducts;
+import it.unibz.infosec.examproject.user.domain.ManageUsers;
+import it.unibz.infosec.examproject.user.domain.User;
+import it.unibz.infosec.examproject.util.crypto.hashing.Hashing;
+import it.unibz.infosec.examproject.util.crypto.rsa.RSA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +15,15 @@ import java.util.Optional;
 public class ManageOrders {
 
     private final OrderRepository orderRepository;
+    private final ManageUsers manageUsers;
+    private final ManageProducts manageProducts;
     private SearchOrders searchOrders;
 
     @Autowired
-    public ManageOrders(OrderRepository orderRepository) {
+    public ManageOrders(OrderRepository orderRepository, ManageUsers manageUsers, ManageProducts manageProducts) {
         this.orderRepository = orderRepository;
+        this.manageUsers = manageUsers;
+        this.manageProducts = manageProducts;
     }
 
     private Order validateOrder (Long id) {
@@ -30,8 +37,41 @@ public class ManageOrders {
     }
 
     public Order createOrder(Long productId, Long clientId) {
+        User client = manageUsers.readUser(clientId);
+        Product product = manageProducts.readProduct(productId);
 
-        return orderRepository.save(new Order(productId, clientId));
+        String orderDocument =
+                "ID: " + product.getId() + "\n" +
+                "NAME: " + product.getName() + "\n" +
+                "COST: " + product.getCost() + "\n" +
+                "VENDOR: " + product.getVendorId() + "\n" +
+                "BUYER: " + client.getId();
+
+        String digest = Hashing.getDigest(orderDocument);
+        byte[] DSA = RSA.encrypt(digest, client.getPrivateKey(), client.getNKey());
+
+        return orderRepository.save(new Order(productId, clientId, orderDocument, DSA));
+    }
+
+    public Order approveOrder(Long idOrder) throws Exception {
+        Order order = readOrder(idOrder);
+        boolean orderValidity = isSignatureOrderValid(order.getId());
+
+        if(!orderValidity)
+            throw new Exception("Order digital signature is not valid!");
+
+        order.setApproved(true);
+        return orderRepository.save(order);
+    }
+
+    public boolean isSignatureOrderValid(Long idOrder) {
+        Order order = readOrder(idOrder);
+        User client = manageUsers.readUser(order.getClientId());
+        byte[] DSA = order.getDSA();
+        String retrievedDigest = RSA.decryptToString(DSA, client.getPublicKey(), client.getNKey());
+        String computedDigest = Hashing.getDigest(order.getOrderDocument());
+
+        return retrievedDigest.equals(computedDigest);
     }
 
     public Order readOrder(Long id) {

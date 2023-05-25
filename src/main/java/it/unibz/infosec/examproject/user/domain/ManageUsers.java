@@ -2,6 +2,8 @@ package it.unibz.infosec.examproject.user.domain;
 
 import it.unibz.infosec.examproject.util.crypto.RandomUtils;
 import it.unibz.infosec.examproject.util.crypto.hashing.Hashing;
+import it.unibz.infosec.examproject.util.crypto.rsa.RSA;
+import it.unibz.infosec.examproject.util.crypto.rsa.RSAKeyPair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +32,9 @@ public class ManageUsers {
 
     public User createUser(String email, String password, int type) {
         final String salt = RandomUtils.generateRandomSalt(32);
-        final String hashedPassword = Hashing.getDigest(password + salt, "SHA256");
-        return userRepository.save(new User(email, hashedPassword, salt, 0, type));
+        final String hashedPassword = Hashing.getDigest(password + salt);
+        final RSAKeyPair keyPair = RSA.generateKeys();
+        return userRepository.save(new User(email, hashedPassword, salt, keyPair.getPrivateExponent(), keyPair.getPublicExponent(), keyPair.getN(),0, type));
     }
 
     public User readUser(Long id) {
