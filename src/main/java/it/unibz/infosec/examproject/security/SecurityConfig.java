@@ -30,8 +30,6 @@ public class SecurityConfig {
 
     private JwtAuthEntryPoint authEntryPoint;
 
-//    private SaltPasswordEncoder passwordEncoder;
-
     @Autowired
     public SecurityConfig(CustomUserDetailsService customUserDetailsService, JwtAuthEntryPoint authEntryPoint) {
         this.customUserDetailsService = customUserDetailsService;

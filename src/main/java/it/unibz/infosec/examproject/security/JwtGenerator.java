@@ -21,7 +21,7 @@ public class JwtGenerator {
                 .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(expireDate)
-                .signWith(SignatureAlgorithm.ES512, SecurityConstants.JWT_SECRET)
+                .signWith(SignatureAlgorithm.HS512, SecurityConstants.JWT_SECRET)
                 .compact();
 
         return token;
