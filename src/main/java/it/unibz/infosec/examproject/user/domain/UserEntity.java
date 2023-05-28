@@ -1,6 +1,5 @@
 package it.unibz.infosec.examproject.user.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +20,6 @@ public class UserEntity {
 
     private String email;
 
-    private int type;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name="user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -30,18 +28,16 @@ public class UserEntity {
 
     private String password;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String salt;
 
     private BigInteger publicKey;
 
-    private BigInteger nKey;
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private BigInteger privateKey;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private BigInteger nKey;
+
     private int balance;
+
 
     public UserEntity(String email, String password, String salt, BigInteger privateKey, BigInteger publicKey, BigInteger nKey, int balance, List<Role> roles) {
         this.publicKey = publicKey;
@@ -70,7 +66,7 @@ public class UserEntity {
         return salt;
     }
 
-    public int addToBalance(int amount) {
+    public int addToBalance (int amount) {
         balance += amount;
         return getBalance();
     }
