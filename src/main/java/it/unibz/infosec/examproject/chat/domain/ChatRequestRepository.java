@@ -16,5 +16,5 @@ public interface ChatRequestRepository extends JpaRepository<ChatRequest, Long> 
     @NonNull
     List<ChatRequest> findByChatId(@NonNull String id);
 
-    List<ChatRequest> findByVendor(Long id);
+    List<ChatRequest> findByVendorId(Long id);
 }

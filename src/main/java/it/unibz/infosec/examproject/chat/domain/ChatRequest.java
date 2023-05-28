@@ -1,6 +1,6 @@
 package it.unibz.infosec.examproject.chat.domain;
 
-import it.unibz.infosec.examproject.user.domain.User;
+import it.unibz.infosec.examproject.user.domain.UserEntity;
 import jakarta.persistence.*;
 import java.util.UUID;
 
@@ -13,18 +13,18 @@ public class ChatRequest {
 
     @OneToOne
     @JoinColumn(name = "vendor")
-    private User vendor;
+    private UserEntity vendor;
 
     @OneToOne
     @JoinColumn(name = "customer")
-    private User customer;
+    private UserEntity customer;
 
     private String chatId;
 
     public ChatRequest() {
     }
 
-    public ChatRequest(User vendor, User customer) {
+    public ChatRequest(UserEntity vendor, UserEntity customer) {
         this.vendor = vendor;
         this.customer = customer;
         this.chatId = UUID.randomUUID().toString();
@@ -34,11 +34,11 @@ public class ChatRequest {
         return id;
     }
 
-    public User getVendor() {
+    public UserEntity getVendor() {
         return vendor;
     }
 
-    public User getCustomer() {
+    public UserEntity getCustomer() {
         return customer;
     }
 
