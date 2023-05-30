@@ -21,25 +21,28 @@ public class UserEntity {
     private String email;
 
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name="user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name="role_id", referencedColumnName = "id"))
-    private List<Role> roles = new ArrayList<>();
+    private String _role;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     private String salt;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private BigInteger publicKey;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private BigInteger nKey;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private BigInteger privateKey;
 
     private BigInteger nKey;
 
     private int balance;
 
-
-    public UserEntity(String email, String password, String salt, BigInteger privateKey, BigInteger publicKey, BigInteger nKey, int balance, List<Role> roles) {
+    public UserEntity(String email, String password, String salt, BigInteger privateKey, BigInteger publicKey, BigInteger nKey, int balance, String role) {
+  
         this.publicKey = publicKey;
         this.privateKey = privateKey;
         this.nKey = nKey;
@@ -47,7 +50,7 @@ public class UserEntity {
         this.password = password;
         this.salt = salt;
         this.balance = balance;
-        this.roles = roles;
+        this._role = role;
     }
 
     public Long getId() {
@@ -74,12 +77,12 @@ public class UserEntity {
         return balance;
     }
 
-    public List<Role> getRoles() {
-        return roles;
+    public Role getRole() {
+        return Role.fromString(_role);
     }
 
-    public void setRoles(List<Role> role) {
-        this.roles = role;
+    public void setRole(String role) {
+        this._role = role;
     }
 
     public BigInteger getPublicKey() {

@@ -23,29 +23,29 @@ import java.util.List;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private AuthenticationManager authenticationManager;
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
-    private ManageUsers manageUsers;
-    private JwtGenerator jwtGenerator;
+    private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final ManageUsers manageUsers;
+    private final JwtGenerator jwtGenerator;
 
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, RoleRepository roleRepository, ManageUsers manageUsers, JwtGenerator jwtGenerator) {
+    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, ManageUsers manageUsers, JwtGenerator jwtGenerator) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
         this.manageUsers = manageUsers;
         this.jwtGenerator = jwtGenerator;
     }
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterDTO registerDTO) {
-        if(userRepository.existsByEmail(registerDTO.getEmail())) {
+        if (userRepository.existsByEmail(registerDTO.getEmail())) {
             return new ResponseEntity<>("Email is taken!", HttpStatus.BAD_REQUEST);
         }
-
-        Role roles = roleRepository.findByName("CLIENT").get();
-        manageUsers.createUser(registerDTO.getEmail(), registerDTO.getPassword(), List.of(roles));
+        final Role role = Role.fromString(registerDTO.getRole());
+        if (role == null) {
+            return new ResponseEntity<>("Role is not valid!", HttpStatus.BAD_REQUEST);
+        }
+        manageUsers.createUser(registerDTO.getEmail(), registerDTO.getPassword(), role);
 
         return new ResponseEntity<>("User registered success!", HttpStatus.OK);
     }

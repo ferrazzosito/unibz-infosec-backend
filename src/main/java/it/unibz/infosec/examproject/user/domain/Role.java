@@ -1,24 +1,26 @@
 package it.unibz.infosec.examproject.user.domain;
 
-import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+public enum Role {
+    CUSTOMER("customer"), VENDOR("vendor");
 
-import java.util.ArrayList;
-import java.util.List;
+    private final String name;
 
-@Entity
-@Setter
-@Getter
-@Table(name = "roles")
-public class Role {
+    Role(String name) {
+        this.name = name;
+    }
 
-    @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private Long id;
+    public String getName() {
+        return name;
+    }
 
-    private String name;
-
+    public static Role fromString(String name) {
+        for (final Role r : values()) {
+            if (r.name.equals(name)) {
+                return r;
+            }
+        }
+        return null;
+    }
 }
 
 
