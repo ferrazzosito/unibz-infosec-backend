@@ -1,6 +1,5 @@
 package it.unibz.infosec.examproject.user.domain;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,14 +20,12 @@ public class UserEntity {
 
     private String email;
 
-    private int type;
 
     private String _role;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String salt;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -40,10 +37,12 @@ public class UserEntity {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private BigInteger privateKey;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private BigInteger nKey;
+
     private int balance;
 
     public UserEntity(String email, String password, String salt, BigInteger privateKey, BigInteger publicKey, BigInteger nKey, int balance, String role) {
+  
         this.publicKey = publicKey;
         this.privateKey = privateKey;
         this.nKey = nKey;
@@ -70,7 +69,7 @@ public class UserEntity {
         return salt;
     }
 
-    public int addToBalance(int amount) {
+    public int addToBalance (int amount) {
         balance += amount;
         return getBalance();
     }

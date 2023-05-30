@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.configurers.*;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableWebSecurity
@@ -45,6 +46,7 @@ public class SecurityConfiguration {
                 authorizationManagerRequestMatcherRegistry
                         .anyRequest()
                         .permitAll());
+        http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues());
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
@@ -61,4 +63,5 @@ public class SecurityConfiguration {
     public JwtAuthenticationFilter jwtAuthenticationFilter () {
         return new JwtAuthenticationFilter();
     }
+
 }
