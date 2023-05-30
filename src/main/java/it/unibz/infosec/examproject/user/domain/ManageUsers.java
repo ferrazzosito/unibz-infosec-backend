@@ -14,7 +14,7 @@ import java.util.Optional;
 @Service
 public class ManageUsers {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     private SearchUsers searchUsers;
 
     @Autowired
@@ -32,13 +32,13 @@ public class ManageUsers {
         return maybeUser.get();
     }
 
-    public UserEntity createUser(String email, String password, List<Role> roles) {
+    public UserEntity createUser(String email, String password, Role role) {
 
         final String salt = RandomUtils.generateRandomSalt(32);
         final String hashedPassword = Hashing.getDigest(password + salt);
 
         final RSAKeyPair keyPair = RSA.generateKeys();
-        return userRepository.save(new UserEntity(email, hashedPassword, salt, keyPair.getPrivateExponent(), keyPair.getPublicExponent(), keyPair.getN(),0, roles));
+        return userRepository.save(new UserEntity(email, hashedPassword, salt, keyPair.getPrivateExponent(), keyPair.getPublicExponent(), keyPair.getN(),0, role.getName()));
     }
 
     public UserEntity readUser(Long id) {

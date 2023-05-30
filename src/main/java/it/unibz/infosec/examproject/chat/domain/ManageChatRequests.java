@@ -1,7 +1,7 @@
 package it.unibz.infosec.examproject.chat.domain;
 
 import it.unibz.infosec.examproject.user.domain.ManageUsers;
-import it.unibz.infosec.examproject.user.domain.RoleRepository;
+import it.unibz.infosec.examproject.user.domain.Role;
 import it.unibz.infosec.examproject.user.domain.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,13 +15,11 @@ import java.util.logging.Logger;
 public class ManageChatRequests {
 
     private final ChatRequestRepository chatRequestRepository;
-    private final RoleRepository roleRepository;
     private final ManageUsers manageUsers;
 
     @Autowired
-    public ManageChatRequests(ChatRequestRepository chatRequestRepository, RoleRepository roleRepository, ManageUsers manageUsers) {
+    public ManageChatRequests(ChatRequestRepository chatRequestRepository, ManageUsers manageUsers) {
         this.chatRequestRepository = chatRequestRepository;
-        this.roleRepository = roleRepository;
         this.manageUsers = manageUsers;
     }
 
@@ -49,10 +47,10 @@ public class ManageChatRequests {
         final UserEntity customer = this.manageUsers.readUser(customerId);
         Logger.getLogger("ManageChatRequest").log(Level.INFO, "customer = " + customer);
         final UserEntity vendor = this.manageUsers.readUser(vendorId);
-        if (!customer.getRoles().contains(this.roleRepository.findByName("CLIENT").get())) {
+        if (customer.getRole() != Role.CUSTOMER) {
             throw new IllegalArgumentException("Chat requests can only be issued by customers");
         }
-        if (!vendor.getRoles().contains(this.roleRepository.findByName("VENDOR").get())) {
+        if (vendor.getRole() != Role.VENDOR) {
             throw new IllegalArgumentException("Chat requests can only be issued towards vendors");
         }
         return this.chatRequestRepository.save(new ChatRequest(
