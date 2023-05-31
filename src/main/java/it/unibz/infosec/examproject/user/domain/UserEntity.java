@@ -1,5 +1,6 @@
 package it.unibz.infosec.examproject.user.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -36,8 +37,6 @@ public class UserEntity {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private BigInteger privateKey;
-
-    private BigInteger nKey;
 
     private int balance;
 

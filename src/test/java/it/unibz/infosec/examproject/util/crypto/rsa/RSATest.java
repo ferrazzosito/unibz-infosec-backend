@@ -18,7 +18,8 @@ public class RSATest {
     public void testEncryptionAndDecryption() {
         final String payload = "hello";
         final RSAKeyPair keyPair = RSA.generateKeys();
-        Assertions.assertEquals(RSA.decryptToString(
+        Assertions.assertEquals(payload,
+                RSA.decryptToString(
                 RSA.encrypt(
                         payload,
                         keyPair.getPublicExponent(),
@@ -26,7 +27,7 @@ public class RSATest {
                 ),
                 keyPair.getPrivateExponent(),
                 keyPair.getN()
-        ), payload);
+        ));
     }
 
 }
