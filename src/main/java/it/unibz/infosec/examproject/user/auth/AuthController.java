@@ -52,15 +52,15 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDTO loginDTO) {
-
-        Authentication authentication = authenticationManager.authenticate(
+        final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDTO.getEmail(),
                         loginDTO.getPassword()));
+        final UserEntity user = this.userRepository
+                .findByEmail(authentication.getName())
+                .orElseThrow();
+        final String token = jwtGenerator.generateToken(user);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String token = jwtGenerator.generateToken(authentication);
-
         return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
     }
 }
