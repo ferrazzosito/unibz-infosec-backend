@@ -22,6 +22,7 @@ public class JwtGenerator {
         final Date expireDate = new Date(currentDate.getTime() + SecurityConstants.JWT_EXPIRATION);
 
         final HashMap<String, Object> claims = new HashMap<>();
+        claims.put("id", user.getId());
         claims.put("role", user.getRole().getName());
 
         return Jwts.builder()
