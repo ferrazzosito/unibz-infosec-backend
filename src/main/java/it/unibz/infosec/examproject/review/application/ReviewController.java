@@ -30,7 +30,7 @@ public class ReviewController {
  */
     @PostMapping("/create")
     public Review createNewReview(@RequestBody CreateReviewDTO dto) {
-        return manageReviews.createReview(dto.getTitle(), dto.getDescription(), dto.getStars(), dto.getDatePublishing(), dto.getProductId(), dto.getReplyFromReviewId());
+        return manageReviews.createReview(dto.getTitle(), dto.getDescription(), dto.getStars(), dto.getDatePublishing(), dto.getProductId(), dto.getReplyFromReviewId(), dto.getAuthor());
     }
 
     @PostMapping("/update/{id}")

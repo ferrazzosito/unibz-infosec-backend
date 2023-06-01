@@ -7,9 +7,9 @@ public class UpdateReviewDTO extends CreateReviewDTO{
     private Long id;
     public UpdateReviewDTO() {super();}
 
-    public UpdateReviewDTO(Long id, String title, String description, int stars, Date datePublishing, Long productId, Long replyFromReviewId){
+    public UpdateReviewDTO(Long id, String title, String description, int stars, Date datePublishing, Long productId, Long replyFromReviewId, Long author){
 
-        super(title, description, stars, datePublishing, productId, replyFromReviewId);
+        super(title, description, stars, datePublishing, productId, replyFromReviewId, author);
         this.id=id;
     }
 

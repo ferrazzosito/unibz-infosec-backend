@@ -26,15 +26,18 @@ public class Review {
 
     private Long replyFromReviewId;
 
+    private Long author;
+
     public Review() {}
 
-    public Review(String title, String description, int stars, Date datePublishing, Long productId, Long replyFromReviewId) {
+    public Review(String title, String description, int stars, Date datePublishing, Long productId, Long replyFromReviewId, Long author) {
         this.title = title;
         this.description = description;
         this.stars = stars;
         this.datePublishing = datePublishing;
         this.productId = productId;
         this.replyFromReviewId = replyFromReviewId;
+        this.author = author;
     }
 
     public Long getId() {
@@ -69,5 +72,9 @@ public class Review {
 
     public Long getReplyFromReviewId() {
         return replyFromReviewId;
+    }
+
+    public Long getAuthor() {
+        return author;
     }
 }
