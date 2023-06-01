@@ -22,7 +22,7 @@ public class ManageReviews {
 
     private Review validateReview(Long id) {
         final Optional<Review> maybeReview = reviewRepository.findById(id);
-        if (maybeReview.isEmpty()) {
+        if (maybeReview.isEmpty() ) {
             throw new IllegalArgumentException("Review with id '" + id + "' does not exist yet!");
         }
         return maybeReview.get();
@@ -30,13 +30,16 @@ public class ManageReviews {
 
     //TODO: validate author Id
     public Review createReview(String title, String description, int stars, Date datePublishing, Long productId, Long replyFromReviewId, Long author) {
+
+        Long replyReviewId = replyFromReviewId == 0 ? 0 : validateReview(replyFromReviewId).getId();
+
         return reviewRepository.save(new Review(
                 title,
                 description,
                 stars,
                 datePublishing,
                 manageProducts.readProduct(productId).getId(),
-                validateReview(replyFromReviewId).getId(),
+                replyReviewId,
                 author)
         );
     }
