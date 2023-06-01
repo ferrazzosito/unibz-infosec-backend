@@ -18,6 +18,8 @@ public class Review {
 
     private String description;
 
+    private int stars;
+
     private Date datePublishing;
 
     private Long productId;
@@ -26,9 +28,10 @@ public class Review {
 
     public Review() {}
 
-    public Review(String title, String description, Date datePublishing, Long productId, Long replyFromReviewId) {
+    public Review(String title, String description, int stars, Date datePublishing, Long productId, Long replyFromReviewId) {
         this.title = title;
         this.description = description;
+        this.stars = stars;
         this.datePublishing = datePublishing;
         this.productId = productId;
         this.replyFromReviewId = replyFromReviewId;
@@ -53,6 +56,8 @@ public class Review {
     public String getDescription() {
         return description;
     }
+
+    public int getStars() { return stars; }
 
     public Date getDatePublishing() {
         return datePublishing;

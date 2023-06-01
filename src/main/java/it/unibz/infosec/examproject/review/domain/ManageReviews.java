@@ -28,10 +28,11 @@ public class ManageReviews {
         return maybeReview.get();
     }
 
-    public Review createReview(String title, String description, Date datePublishing, Long productId, Long replyFromReviewId) {
+    public Review createReview(String title, String description, int stars, Date datePublishing, Long productId, Long replyFromReviewId) {
         return reviewRepository.save(new Review(
                 title,
                 description,
+                stars,
                 datePublishing,
                 manageProducts.readProduct(productId).getId(),
                 validateReview(replyFromReviewId).getId())
