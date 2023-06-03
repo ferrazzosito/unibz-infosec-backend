@@ -46,8 +46,11 @@ public class ManageProducts {
         return productRepository.save(product);
     }
 
-    public Product deleteProduct(Long id) {
+    public Product deleteProduct(Long id, Long vendorId) {
         final Product product = validateProduct(id);
+        if (!vendorId.equals(product.getVendorId())) {
+            throw new IllegalArgumentException("Only the owner of a product can delete it");
+        }
         productRepository.delete(product);
         return product;
     }

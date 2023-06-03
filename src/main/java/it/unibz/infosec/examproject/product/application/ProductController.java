@@ -4,6 +4,8 @@ package it.unibz.infosec.examproject.product.application;
 import it.unibz.infosec.examproject.product.domain.ManageProducts;
 import it.unibz.infosec.examproject.product.domain.Product;
 import it.unibz.infosec.examproject.product.domain.SearchProducts;
+import it.unibz.infosec.examproject.review.domain.ManageReviews;
+import it.unibz.infosec.examproject.review.domain.Review;
 import it.unibz.infosec.examproject.user.domain.Role;
 import it.unibz.infosec.examproject.user.domain.UserEntity;
 import it.unibz.infosec.examproject.user.domain.UserRepository;
@@ -20,12 +22,14 @@ public class ProductController {
     private final UserRepository userRepository;
     private final ManageProducts manageProducts;
     private final SearchProducts searchProducts;
+    private final ManageReviews manageReviews;
 
     @Autowired
-    public ProductController(ManageProducts manageProducts, SearchProducts searchProducts, UserRepository userRepository) {
+    public ProductController(ManageProducts manageProducts, SearchProducts searchProducts, ManageReviews manageReviews, UserRepository userRepository) {
         this.manageProducts = manageProducts;
         this.searchProducts = searchProducts;
         this.userRepository = userRepository;
+        this.manageReviews = manageReviews;
     }
 
     @GetMapping("/{id}")
@@ -54,7 +58,12 @@ public class ProductController {
 
     @GetMapping("/delete/{id}")
     public Product deleteProduct(@PathVariable("id") Long id)  {
-        return manageProducts.deleteProduct(id);
+        return manageProducts.deleteProduct(id, RESTUtils.getLoggedUser(userRepository).getId());
+    }
+
+    @GetMapping("/{id}/reviews")
+    public List<Review> getReviews(@PathVariable("id") Long productId) {
+        return manageReviews.getReviewsForProduct(manageProducts.readProduct(productId).getId());
     }
 
     @GetMapping("/getAll")
