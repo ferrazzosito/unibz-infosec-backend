@@ -7,8 +7,6 @@ import it.unibz.infosec.examproject.util.crypto.rsa.RSAKeyPair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,18 +20,14 @@ public class ManageUsers {
         this.userRepository = userRepository;
     }
 
-    private UserEntity validateUser (Long id) {
-
-        Optional<UserEntity> maybeUser = userRepository.findById(id);
-
-        if(maybeUser.isEmpty())
+    private UserEntity validateUser(Long id) {
+        final Optional<UserEntity> maybeUser = userRepository.findById(id);
+        if (maybeUser.isEmpty())
             throw new IllegalArgumentException("User with id '" + id + "' does not exist yet!");
-
         return maybeUser.get();
     }
 
     public UserEntity createUser(String email, String password, Role role) {
-
         final String salt = RandomUtils.generateRandomSalt(32);
         final String hashedPassword = Hashing.getDigest(password + salt);
 
@@ -42,29 +36,18 @@ public class ManageUsers {
     }
 
     public UserEntity readUser(Long id) {
-
-        UserEntity userEntity = validateUser(id);
-
-        return userEntity;
-
+        return validateUser(id);
     }
 
-    public UserEntity updateUser (Long id, int amountToAdd) {
-
-        UserEntity userEntity = validateUser(id);
-
+    public UserEntity updateUser(Long id, int amountToAdd) {
+        final UserEntity userEntity = validateUser(id);
         userEntity.addToBalance(amountToAdd);
-
         return userRepository.save(userEntity);
     }
 
-    public UserEntity deleteUser (Long id) {
-
-        UserEntity userEntity = validateUser(id);
-
+    public UserEntity deleteUser(Long id) {
+        final UserEntity userEntity = validateUser(id);
         userRepository.delete(userEntity);
-
         return userEntity;
     }
-
 }

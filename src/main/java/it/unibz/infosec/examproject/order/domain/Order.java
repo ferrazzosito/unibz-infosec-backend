@@ -20,7 +20,7 @@ public class Order {
 
     private byte[] DSA;
 
-    public Order () {}
+    public Order() {}
 
     public Order(Long productId, Long clientId, String orderDocument, byte[] DSA) {
         this.productId = productId;
@@ -42,9 +42,9 @@ public class Order {
         return clientId;
     }
 
-    public byte[] getDSA () {return DSA;}
+    public byte[] getDSA() {return DSA;}
 
-    public String getOrderDocument () {return orderDocument;}
+    public String getOrderDocument() {return orderDocument;}
 
     public boolean isApproved() {
         return isApproved;

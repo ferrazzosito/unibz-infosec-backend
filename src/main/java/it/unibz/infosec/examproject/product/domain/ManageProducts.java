@@ -21,7 +21,7 @@ public class ManageProducts {
         this.manageUsers = manageUsers;
     }
 
-    private Product validateProduct (Long id) {
+    private Product validateProduct(Long id) {
         final Optional<Product> maybeProduct = productRepository.findById(id);
         if (maybeProduct.isEmpty())
             throw new IllegalArgumentException("Product with id '" + id + "' does not exist yet!");

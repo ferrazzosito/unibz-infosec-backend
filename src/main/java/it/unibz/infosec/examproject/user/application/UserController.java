@@ -16,7 +16,7 @@ public class UserController {
     private final SearchUsers searchUsers;
 
     @Autowired
-    public UserController (ManageUsers manageUsers, SearchUsers searchUsers) {
+    public UserController(ManageUsers manageUsers, SearchUsers searchUsers) {
         this.manageUsers = manageUsers;
         this.searchUsers = searchUsers;
     }
@@ -25,11 +25,6 @@ public class UserController {
     public UserEntity findById(@PathVariable("id") Long id) {
         return manageUsers.readUser(id);
     }
-
-//    @PostMapping("/create")
-//    public UserEntity createNewUser(@RequestBody CreateUserDTO dto) {
-//        return manageUsers.createUser(dto.getEmail(), dto.getPassword());
-//    }
 
     @PostMapping("/update/{id}")
     public UserEntity updateUser(@PathVariable("id") Long id, @RequestBody UpdateUserDTO dto){
@@ -45,5 +40,4 @@ public class UserController {
     public List<UserEntity> findAll(){
         return searchUsers.findAll();
     }
-
 }
