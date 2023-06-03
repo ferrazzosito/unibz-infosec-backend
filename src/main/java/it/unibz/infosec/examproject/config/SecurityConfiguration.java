@@ -4,6 +4,7 @@ import it.unibz.infosec.examproject.security.CustomAuthenticationProvider;
 import it.unibz.infosec.examproject.security.CustomUserDetailsService;
 import it.unibz.infosec.examproject.security.JwtAuthEntryPoint;
 import it.unibz.infosec.examproject.security.JwtAuthenticationFilter;
+import it.unibz.infosec.examproject.user.domain.Role;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.RequestMatchers;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @Configuration
 @EnableWebSecurity
@@ -46,6 +50,7 @@ public class SecurityConfiguration {
         http.sessionManagement(httpSecuritySessionManagementConfigurer ->
                 httpSecuritySessionManagementConfigurer.sessionCreationPolicy(
                         SessionCreationPolicy.STATELESS));
+        http.authenticationProvider(authProvider);
         http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                 authorizationManagerRequestMatcherRegistry
                         .requestMatchers("/auth/**")
@@ -68,7 +73,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public JwtAuthenticationFilter jwtAuthenticationFilter () {
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter();
     }
 

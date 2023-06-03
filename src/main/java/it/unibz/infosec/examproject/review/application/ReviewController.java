@@ -50,4 +50,9 @@ public class ReviewController {
     public List<Review> findAll(){
         return searchReviews.findAll();
     }
+
+    @GetMapping("/{id}/replies")
+    public List<Review> getReplies(@PathVariable("id") Long id) {
+        return manageReviews.getReply(id);
+    }
 }

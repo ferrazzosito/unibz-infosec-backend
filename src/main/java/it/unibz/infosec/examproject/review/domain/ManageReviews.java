@@ -5,7 +5,9 @@ import it.unibz.infosec.examproject.user.domain.ManageUsers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.View;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -72,4 +74,7 @@ public class ManageReviews {
         return reviewRepository.findByProductId(productId);
     }
 
+    public List<Review> getReply(Long reviewId) {
+        return reviewRepository.findByReplyFromReviewId(reviewId).map(List::of).orElseGet(ArrayList::new);
+    }
 }
