@@ -6,6 +6,7 @@ import it.unibz.infosec.examproject.chat.domain.ManageChatRequests;
 import it.unibz.infosec.examproject.user.domain.Role;
 import it.unibz.infosec.examproject.user.domain.UserEntity;
 import it.unibz.infosec.examproject.user.domain.UserRepository;
+import it.unibz.infosec.examproject.util.RESTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -30,23 +31,17 @@ public class ChatRequestController {
 
     @PostMapping("/request")
     public ChatRequest createNewChatRequest(@RequestBody CreateChatRequestDTO dto) {
-        final User loggedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        final UserEntity loggedUserEntity =
-                this.userRepository.findByEmail(loggedUser.getUsername()).orElseThrow(() ->
-                        new IllegalStateException("Logged user is invalid. This should not happen."));
-        return this.manageChatRequests.createChatRequest(loggedUserEntity.getId(), dto.getVendorId());
+        return this.manageChatRequests.createChatRequest(
+                RESTUtils.getLoggedUser(userRepository).getId(), dto.getVendorId());
     }
 
     @GetMapping("/requests")
     public List<ChatRequest> getChatRequestsForVendor() {
-        final User loggedUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        final UserEntity loggedUserEntity =
-                this.userRepository.findByEmail(loggedUser.getUsername()).orElseThrow(() ->
-                        new IllegalStateException("Logged user is invalid. This should not happen."));
-        if (loggedUserEntity.getRole() != Role.VENDOR) {
+        final UserEntity loggedUser = RESTUtils.getLoggedUser(userRepository);
+        if (loggedUser.getRole() != Role.VENDOR) {
             throw new IllegalArgumentException("Chat requests can only be listed for users of type vendor");
         }
-        return this.manageChatRequests.findChatRequestsForVendor(loggedUserEntity.getId());
+        return this.manageChatRequests.findChatRequestsForVendor(loggedUser.getId());
     }
 
 }

@@ -4,14 +4,12 @@ public class CreateProductDTO {
 
     private String name;
     private int cost;
-    private Long vendorId;
 
     public CreateProductDTO() {}
 
-    public CreateProductDTO(String name, int cost, Long vendorId) {
+    public CreateProductDTO(String name, int cost) {
         this.name = name;
         this.cost = cost;
-        this.vendorId = vendorId;
     }
 
     public String getName() {
@@ -28,13 +26,5 @@ public class CreateProductDTO {
 
     public void setCost(int cost) {
         this.cost = cost;
-    }
-
-    public Long getVendorId() {
-        return vendorId;
-    }
-
-    public void setVendorId(Long vendorId) {
-        this.vendorId = vendorId;
     }
 }
