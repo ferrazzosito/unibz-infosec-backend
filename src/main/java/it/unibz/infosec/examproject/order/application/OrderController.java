@@ -62,4 +62,13 @@ public class OrderController {
         }
         return manageOrders.getByCustomer(loggedUser.getId());
     }
+
+    @GetMapping("/sold")
+    public List<Order> getSoldForVendor() {
+        final UserEntity loggedUser = RESTUtils.getLoggedUser(userRepository);
+        if (loggedUser.getRole() != Role.VENDOR) {
+            throw new IllegalArgumentException("Wrong user type for this operation");
+        }
+        return manageOrders.getByVendor(loggedUser.getId());
+    }
 }

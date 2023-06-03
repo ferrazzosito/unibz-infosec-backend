@@ -15,4 +15,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @NonNull
     List<Order> findByClientId(@NonNull Long customer);
+
+    @NonNull
+    List<Order> findByVendorId(@NonNull Long vendor);
 }

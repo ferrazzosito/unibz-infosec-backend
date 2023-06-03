@@ -48,7 +48,7 @@ public class ManageOrders {
         String digest = Hashing.getDigest(orderDocument);
         byte[] DSA = RSA.encrypt(digest, client.getPrivateKey(), client.getNKey());
 
-        return orderRepository.save(new Order(productId, clientId, orderDocument, DSA));
+        return orderRepository.save(new Order(productId, product.getVendorId(), clientId, orderDocument, DSA));
     }
 
     public Order approveOrder(Long idOrder) throws Exception {
@@ -65,7 +65,7 @@ public class ManageOrders {
     public boolean isSignatureOrderValid(Long idOrder) {
         final Order order = readOrder(idOrder);
         final UserEntity client = manageUsers.readUser(order.getClientId());
-        byte[] DSA = order.getDSA();
+        final byte[] DSA = order.getDSA();
         final String retrievedDigest = RSA.decryptToString(DSA, client.getPublicKey(), client.getNKey());
         final String computedDigest = Hashing.getDigest(order.getOrderDocument());
 
@@ -87,5 +87,9 @@ public class ManageOrders {
 
     public List<Order> getByCustomer(Long customerId) {
         return orderRepository.findByClientId(customerId);
+    }
+
+    public List<Order> getByVendor(Long vendorId) {
+        return orderRepository.findByVendorId(vendorId);
     }
 }
