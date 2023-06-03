@@ -92,4 +92,12 @@ public class ManageOrders {
     public List<Order> getByVendor(Long vendorId) {
         return orderRepository.findByVendorId(vendorId);
     }
+
+    public List<Order> getApprovedByVendor(Long vendorId) {
+        return orderRepository.findByVendorIdAndIsApprovedTrue(vendorId);
+    }
+
+    public List<Order> getToBeApprovedByVendor(Long vendorId) {
+        return orderRepository.findByVendorIdAndIsApprovedFalse(vendorId);
+    }
 }

@@ -71,4 +71,22 @@ public class OrderController {
         }
         return manageOrders.getByVendor(loggedUser.getId());
     }
+
+    @GetMapping("/approved")
+    public List<Order> getApprovedForVendor() {
+        final UserEntity loggedUser = RESTUtils.getLoggedUser(userRepository);
+        if (loggedUser.getRole() != Role.VENDOR) {
+            throw new IllegalArgumentException("Wrong user type for this operation");
+        }
+        return manageOrders.getApprovedByVendor(loggedUser.getId());
+    }
+
+    @GetMapping("/pending")
+    public List<Order> getToBeApprovedForVendor() {
+        final UserEntity loggedUser = RESTUtils.getLoggedUser(userRepository);
+        if (loggedUser.getRole() != Role.VENDOR) {
+            throw new IllegalArgumentException("Wrong user type for this operation");
+        }
+        return manageOrders.getToBeApprovedByVendor(loggedUser.getId());
+    }
 }
