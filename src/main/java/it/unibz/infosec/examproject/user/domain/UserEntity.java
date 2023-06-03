@@ -21,12 +21,12 @@ public class UserEntity {
 
     private String email;
 
-
     private String _role;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String salt;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -38,10 +38,10 @@ public class UserEntity {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private BigInteger privateKey;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private int balance;
 
     public UserEntity(String email, String password, String salt, BigInteger privateKey, BigInteger publicKey, BigInteger nKey, int balance, String role) {
-  
         this.publicKey = publicKey;
         this.privateKey = privateKey;
         this.nKey = nKey;
