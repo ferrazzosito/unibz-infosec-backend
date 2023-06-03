@@ -17,6 +17,7 @@ import org.springframework.security.config.annotation.web.configurers.*;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.RequestMatchers;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -47,8 +48,10 @@ public class SecurityConfiguration {
                         SessionCreationPolicy.STATELESS));
         http.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
                 authorizationManagerRequestMatcherRegistry
+                        .requestMatchers("/auth/**")
+                        .permitAll()
                         .anyRequest()
-                        .permitAll());
+                        .authenticated());
         http.cors(httpSecurityCorsConfigurer ->
                 httpSecurityCorsConfigurer.configurationSource(
                         request -> new CorsConfiguration().applyPermitDefaultValues()));
