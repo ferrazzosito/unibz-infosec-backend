@@ -38,6 +38,10 @@ public class ManageOrders {
         UserEntity client = manageUsers.readUser(clientId);
         Product product = manageProducts.readProduct(productId);
 
+        if (client.getBalance() < product.getCost()) {
+            throw new IllegalArgumentException("Insufficient balance to place this order!");
+        }
+
         String orderDocument =
                 "ID: " + product.getId() + "\n" +
                 "NAME: " + product.getName() + "\n" +
