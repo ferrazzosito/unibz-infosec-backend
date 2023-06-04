@@ -32,11 +32,14 @@ public class ReviewController {
 
     @PostMapping("/create")
     public Review createNewReview(@RequestBody CreateReviewDTO dto) {
-        return manageReviews.createReview(dto.getTitle(), dto.getDescription(), dto.getStars(), dto.getDatePublishing(), dto.getProductId(), dto.getReplyFromReviewId(), dto.getAuthor());
+        return manageReviews.createReview(dto.getTitle(),
+                dto.getDescription(), dto.getStars(),
+                    dto.getDatePublishing(), dto.getProductId(),
+                        dto.getReplyFromReviewId(), RESTUtils.getLoggedUser(userRepository).getId());
     }
 
     @PostMapping("/update/{id}")
-    public Review updateReview(@PathVariable("id") Long id,@RequestBody UpdateReviewDTO dto) {
+    public Review updateReview(@PathVariable("id") Long id, @RequestBody UpdateReviewDTO dto) {
         return manageReviews.updateReview(id,
                 RESTUtils.getLoggedUser(userRepository).getId(), dto.getTitle(), dto.getDescription());
     }
@@ -53,6 +56,6 @@ public class ReviewController {
 
     @GetMapping("/{id}/replies")
     public List<Review> getReplies(@PathVariable("id") Long id) {
-        return manageReviews.getReply(id);
+        return manageReviews.getReplies(id);
     }
 }
