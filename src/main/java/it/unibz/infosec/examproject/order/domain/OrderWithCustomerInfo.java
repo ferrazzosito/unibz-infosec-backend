@@ -1,18 +1,18 @@
 package it.unibz.infosec.examproject.order.domain;
 
-import it.unibz.infosec.examproject.product.domain.Product;
+import it.unibz.infosec.examproject.user.domain.SafeUserEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class OrderWithProductInfo extends Order {
+public class OrderWithCustomerInfo extends Order {
 
-    private Product product;
+    private SafeUserEntity customer;
 
-    public OrderWithProductInfo(Order order, Product product) {
+    public OrderWithCustomerInfo(Order order, SafeUserEntity customer) {
         super(order.getProductId(), order.getVendorId(), order.getClientId(), order.getOrderDocument(), order.getDSA());
         this.id = order.getId();
-        this.product = product;
+        this.customer = customer;
     }
 }

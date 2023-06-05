@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 public class SafeUserEntity {
 
     private String email;
-    private String _role;
+    private String role;
 
     public SafeUserEntity(String email, String role) {
         this.email = email;
-        this._role = role;
+        this.role = role;
     }
 }

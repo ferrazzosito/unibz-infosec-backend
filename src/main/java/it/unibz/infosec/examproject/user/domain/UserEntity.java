@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -21,7 +19,7 @@ public class UserEntity {
 
     private String email;
 
-    private String _role;
+    private String role;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
@@ -49,7 +47,7 @@ public class UserEntity {
         this.password = password;
         this.salt = salt;
         this.balance = balance;
-        this._role = role;
+        this.role = role;
     }
 
     public Long getId() {
@@ -77,11 +75,11 @@ public class UserEntity {
     }
 
     public Role getRole() {
-        return Role.fromString(_role);
+        return Role.fromString(role);
     }
 
     public void setRole(String role) {
-        this._role = role;
+        this.role = role;
     }
 
     public BigInteger getPublicKey() {

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.unibz.infosec.examproject.product.domain.ManageProducts;
 import it.unibz.infosec.examproject.product.domain.Product;
 import it.unibz.infosec.examproject.user.domain.ManageUsers;
+import it.unibz.infosec.examproject.user.domain.SafeUserEntity;
 import it.unibz.infosec.examproject.user.domain.UserEntity;
 import it.unibz.infosec.examproject.util.crypto.hashing.Hashing;
 import it.unibz.infosec.examproject.util.crypto.rsa.RSA;
@@ -117,18 +118,18 @@ public class ManageOrders {
 
     public List<Order> getByCustomer(Long customerId) {
         return orderRepository.findByClientId(customerId).stream().map(o ->
-                new OrderWithProductInfo(
-                        o.getProductId(),
-                        o.getVendorId(),
-                        o.getClientId(),
-                        o.getOrderDocument(),
-                        o.getDSA(),
+                new OrderWithProductInfo(o,
                         manageProducts.readProduct(o.getProductId())
                 )).collect(Collectors.toList());
     }
 
     public List<Order> getByVendor(Long vendorId) {
-        return orderRepository.findByVendorId(vendorId);
+        return orderRepository.findByVendorId(vendorId).stream().map(o -> {
+            final UserEntity customer = manageUsers.readUser(o.getClientId());
+            return new OrderWithCustomerInfo(o,
+                    new SafeUserEntity(customer.getEmail(), customer.getRole().getName())
+            );
+        }).collect(Collectors.toList());
     }
 
     public List<Order> getApprovedByVendor(Long vendorId) {
