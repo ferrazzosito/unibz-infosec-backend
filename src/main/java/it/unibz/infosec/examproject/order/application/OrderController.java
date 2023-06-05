@@ -106,11 +106,14 @@ public class OrderController {
         if (order.isApproved()) {
             throw new IllegalArgumentException("This order has already been approved");
         }
+
+        final Order approved;
         try {
-            manageOrders.approveOrder(id);
+            approved = manageOrders.approveOrder(id);
         } catch (Exception e) {
             throw new IllegalArgumentException(e.getMessage());
         }
-        return new ResponseEntity<>(new ApproveOrderResponseDTO(true, id), HttpStatus.OK);
+        return new ResponseEntity<>(new ApproveOrderResponseDTO(
+                true, approved.getId()), HttpStatus.OK);
     }
 }

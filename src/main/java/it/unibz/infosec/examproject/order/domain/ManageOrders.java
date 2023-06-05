@@ -77,12 +77,15 @@ public class ManageOrders {
 
     public Order approveOrder(Long idOrder) throws Exception {
         final Order order = readOrder(idOrder);
-        boolean orderValidity = isSignatureOrderValid(order.getId());
+        final Product product = manageProducts.readProduct(order.getProductId());
+        final boolean orderValidity = isSignatureOrderValid(order.getId());
 
         if (!orderValidity) {
             throw new Exception("Order digital signature is not valid!");
         }
 
+        manageUsers.updateUser(order.getClientId(),
+                Math.negateExact(product.getCost()));
         order.setApproved(true);
         return orderRepository.save(order);
     }
