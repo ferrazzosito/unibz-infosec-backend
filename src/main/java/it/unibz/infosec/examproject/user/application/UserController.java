@@ -37,6 +37,10 @@ public class UserController {
     public UserEntity updateUser(@PathVariable("id") Long id, @RequestBody UpdateUserDTO dto) {
         return manageUsers.updateUser(id,
                 RESTUtils.getLoggedUser(userRepository).getId(), dto.getBalance());
+
+    @PostMapping("/update/{id}/{balance}")
+    public UserEntity updateUser(@PathVariable("id") Long id,@PathVariable("balance") int balance){
+        return manageUsers.updateUser(id, balance);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -47,5 +51,10 @@ public class UserController {
     @GetMapping("/getAll")
     public List<UserEntity> findAll(){
         return searchUsers.findAll();
+    }
+
+    @PostMapping("/transfer/{id}/{email}/{amount}")
+    public UserEntity transferMoney(@PathVariable("id") Long id, @PathVariable("email") String email, @PathVariable("amount") int amount) {
+        return manageUsers.sendAmount(id, email, amount);
     }
 }
