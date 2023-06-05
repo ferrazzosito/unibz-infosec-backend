@@ -9,6 +9,9 @@ import it.unibz.infosec.examproject.user.domain.UserEntity;
 import it.unibz.infosec.examproject.user.domain.UserRepository;
 import it.unibz.infosec.examproject.util.RESTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -88,5 +91,26 @@ public class OrderController {
             throw new IllegalArgumentException("Wrong user type for this operation");
         }
         return manageOrders.getToBeApprovedByVendor(loggedUser.getId());
+    }
+
+    @PostMapping("{id}/approve")
+    public ResponseEntity<ApproveOrderResponseDTO> approveOrder(@PathVariable("id") Long id) {
+        final UserEntity loggedUser = RESTUtils.getLoggedUser(userRepository);
+        if (loggedUser.getRole() != Role.VENDOR) {
+            throw new IllegalArgumentException("Wrong user type for this operation");
+        }
+        final Order order = manageOrders.readOrder(id);
+        if (!order.getVendorId().equals(loggedUser.getId())) {
+            throw new IllegalArgumentException("Only the issuer of an order can approve it");
+        }
+        if (order.isApproved()) {
+            throw new IllegalArgumentException("This order has already been approved");
+        }
+        try {
+            manageOrders.approveOrder(id);
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e.getMessage());
+        }
+        return new ResponseEntity<>(new ApproveOrderResponseDTO(true, id), HttpStatus.OK);
     }
 }

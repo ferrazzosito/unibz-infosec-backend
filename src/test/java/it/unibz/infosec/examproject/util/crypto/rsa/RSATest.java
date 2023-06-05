@@ -9,15 +9,15 @@ public class RSATest {
 
     @Test
     public void testGeneratedKeysAreRandom() {
-        RSAKeyPair keyPair1 = RSA.generateKeys();
-        RSAKeyPair keyPair2 = RSA.generateKeys();
+        RSAKeyPair keyPair1 = RSA.generateKeys(1024);
+        RSAKeyPair keyPair2 = RSA.generateKeys(1024);
         Assertions.assertNotEquals(keyPair1.getN(), keyPair2.getN());
     }
 
     @Test
     public void testEncryptionAndDecryption() {
         final String payload = "hello";
-        final RSAKeyPair keyPair = RSA.generateKeys();
+        final RSAKeyPair keyPair = RSA.generateKeys(1024);
         Assertions.assertEquals(payload,
                 RSA.decryptToString(
                 RSA.encrypt(

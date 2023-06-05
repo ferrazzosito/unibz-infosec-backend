@@ -1,5 +1,9 @@
 package it.unibz.infosec.examproject.order.domain;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.unibz.infosec.examproject.product.domain.ManageProducts;
 import it.unibz.infosec.examproject.product.domain.Product;
 import it.unibz.infosec.examproject.user.domain.ManageUsers;
@@ -9,11 +13,20 @@ import it.unibz.infosec.examproject.util.crypto.rsa.RSA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class ManageOrders {
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    static {
+        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+    }
 
     private final OrderRepository orderRepository;
     private final ManageUsers manageUsers;
@@ -29,8 +42,9 @@ public class ManageOrders {
 
     private Order validateOrder(Long id) {
         final Optional<Order> maybeOrder = orderRepository.findById(id);
-        if (maybeOrder.isEmpty())
+        if (maybeOrder.isEmpty()) {
             throw new IllegalArgumentException("Order with id '" + id + "' does not exist yet!");
+        }
         return maybeOrder.get();
     }
 
@@ -48,6 +62,12 @@ public class ManageOrders {
                 "COST: " + product.getCost() + "\n" +
                 "VENDOR: " + product.getVendorId() + "\n" +
                 "BUYER: " + client.getId();
+//        final String orderPayload;
+//        try {
+//            orderPayload = objectMapper.writeValueAsString(new Invoice(product, client, new Date()));
+//        } catch (JsonProcessingException e) {
+//            throw new IllegalStateException("Could not create an invoice for this order");
+//        }
 
         String digest = Hashing.getDigest(orderDocument);
         byte[] DSA = RSA.encrypt(digest, client.getPrivateKey(), client.getNKey());
@@ -59,8 +79,9 @@ public class ManageOrders {
         final Order order = readOrder(idOrder);
         boolean orderValidity = isSignatureOrderValid(order.getId());
 
-        if (!orderValidity)
+        if (!orderValidity) {
             throw new Exception("Order digital signature is not valid!");
+        }
 
         order.setApproved(true);
         return orderRepository.save(order);
@@ -73,6 +94,7 @@ public class ManageOrders {
         final String retrievedDigest = RSA.decryptToString(DSA, client.getPublicKey(), client.getNKey());
         final String computedDigest = Hashing.getDigest(order.getOrderDocument());
 
+        Logger.getLogger("ManageOrders").log(Level.INFO, "computedDigest = " + computedDigest + " retrievedDigest = " + retrievedDigest);
         return retrievedDigest.equals(computedDigest);
     }
 

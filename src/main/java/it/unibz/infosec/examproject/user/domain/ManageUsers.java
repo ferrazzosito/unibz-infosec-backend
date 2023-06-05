@@ -31,7 +31,7 @@ public class ManageUsers {
         final String salt = RandomUtils.generateRandomSalt(32);
         final String hashedPassword = Hashing.getDigest(password + salt);
 
-        final RSAKeyPair keyPair = RSA.generateKeys();
+        final RSAKeyPair keyPair = RSA.generateKeys(1024);
         return userRepository.save(new UserEntity(email, hashedPassword, salt, keyPair.getPrivateExponent(), keyPair.getPublicExponent(), keyPair.getN(),0, role.getName()));
     }
 

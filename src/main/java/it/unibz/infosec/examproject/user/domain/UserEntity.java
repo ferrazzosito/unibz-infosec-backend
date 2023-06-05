@@ -29,19 +29,22 @@ public class UserEntity {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String salt;
 
-    private BigInteger publicKey;
+    @Column(length = 1024)
+    private String publicKey;
 
-    private BigInteger nKey;
+    @Column(length = 1024)
+    private String nKey;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private BigInteger privateKey;
+    @Column(length = 1024)
+    private String privateKey;
 
     private int balance;
 
     public UserEntity(String email, String password, String salt, BigInteger privateKey, BigInteger publicKey, BigInteger nKey, int balance, String role) {
-        this.publicKey = publicKey;
-        this.privateKey = privateKey;
-        this.nKey = nKey;
+        this.publicKey = publicKey.toString();
+        this.privateKey = privateKey.toString();
+        this.nKey = nKey.toString();
         this.email = email;
         this.password = password;
         this.salt = salt;
@@ -82,14 +85,14 @@ public class UserEntity {
     }
 
     public BigInteger getPublicKey() {
-        return publicKey;
+        return new BigInteger(publicKey);
     }
 
     public BigInteger getPrivateKey() {
-        return privateKey;
+        return new BigInteger(privateKey);
     }
 
-    public BigInteger getNKey () {
-        return nKey;
+    public BigInteger getNKey() {
+        return new BigInteger(nKey);
     }
 }

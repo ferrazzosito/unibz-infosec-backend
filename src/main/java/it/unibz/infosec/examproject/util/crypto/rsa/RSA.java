@@ -7,9 +7,9 @@ import java.security.SecureRandom;
 
 public class RSA {
 
-    public static RSAKeyPair generateKeys() {
-        final BigInteger p = RSAUtils.generateRandomPrime();
-        final BigInteger q = RSAUtils.generateRandomPrime();
+    public static RSAKeyPair generateKeys(int bits) {
+        final BigInteger p = RSAUtils.generateRandomPrime(bits);
+        final BigInteger q = RSAUtils.generateRandomPrime(bits);
         final BigInteger n = p.multiply(q);
         final BigInteger phi = p.subtract(BigInteger.ONE)
             .multiply(q.subtract(BigInteger.ONE));
