@@ -1,5 +1,6 @@
 package it.unibz.infosec.examproject.security;
 
+import it.unibz.infosec.examproject.user.domain.UnsafeUserRepository;
 import it.unibz.infosec.examproject.user.domain.UserEntity;
 import it.unibz.infosec.examproject.user.domain.UserRepository;
 import it.unibz.infosec.examproject.util.crypto.hashing.Hashing;
@@ -22,12 +23,16 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UnsafeUserRepository unsafeUserRepository;
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
 
-        Optional<UserEntity> maybeUser = userRepository.findByEmail(email);
+        // Optional<UserEntity> maybeUser = userRepository.findByEmail(email);
+        Optional<UserEntity> maybeUser = unsafeUserRepository.findByEmail(email);
         if (maybeUser.isPresent()) {
             Logger.getLogger("CustomAuthenticationProvider").log(Level.INFO, maybeUser.get().toString());
             UserEntity user = maybeUser.get();
