@@ -18,4 +18,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     @NonNull
     List<Review> findByReplyFromReviewId(@NonNull Long review);
+
+    @NonNull
+    List<Review> findByAuthor(@NonNull Long author);
 }

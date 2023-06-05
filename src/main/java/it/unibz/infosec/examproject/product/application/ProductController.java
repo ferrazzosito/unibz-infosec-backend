@@ -63,7 +63,7 @@ public class ProductController {
 
     @GetMapping("/{id}/reviews")
     public List<Review> getReviews(@PathVariable("id") Long productId) {
-        return manageReviews.getReviewsForProduct(manageProducts.readProduct(productId).getId());
+        return manageReviews.getByProduct(manageProducts.readProduct(productId).getId());
     }
 
     @GetMapping("/getAll")

@@ -68,7 +68,11 @@ public class ManageReviews {
         return review;
     }
 
-    public List<Review> getReviewsForProduct(Long productId) {
+    public List<Review> getByCustomer(Long customerId) {
+        return reviewRepository.findByAuthor(customerId);
+    }
+
+    public List<Review> getByProduct(Long productId) {
         return reviewRepository.findByProductId(productId);
     }
 
