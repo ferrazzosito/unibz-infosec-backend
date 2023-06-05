@@ -24,7 +24,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
 
@@ -35,14 +34,14 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             final String salt = user.getSalt();
             final String hashedPassword = Hashing.getDigest(password + salt);
 
-            if(hashedPassword.equals(user.getPassword()))
+            if (hashedPassword.equals(user.getPassword())) {
                 return new UsernamePasswordAuthenticationToken(
                         email, hashedPassword, List.of(new SimpleGrantedAuthority(
                                 user.getRole().getName())));
+            }
         }
 
         return null;
-
     }
 
     @Override

@@ -48,6 +48,17 @@ public class RSAUtils {
         return a;
     }
 
+    public static BigInteger generateRandomPrime(int bits) {
+        BigInteger n = generateRandomPrime();
+        for (int i = 1; i < bits / Integer.SIZE; i++) {
+            n = n.or(generateRandomPrime().shiftLeft(Integer.SIZE * i));
+        }
+        if (n.isProbablePrime(5)) {
+            return n;
+        }
+        return generateRandomPrime(bits);
+    }
+
     public static BigInteger generateRandomPrime() {
         int n;
         do {

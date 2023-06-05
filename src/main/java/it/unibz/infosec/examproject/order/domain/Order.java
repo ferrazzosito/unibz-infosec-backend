@@ -8,9 +8,11 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
     private Long productId;
+
+    private Long vendorId;
 
     private Long clientId;
 
@@ -20,10 +22,11 @@ public class Order {
 
     private byte[] DSA;
 
-    public Order () {}
+    public Order() {}
 
-    public Order(Long productId, Long clientId, String orderDocument, byte[] DSA) {
+    public Order(Long productId, Long vendorId, Long clientId, String orderDocument, byte[] DSA) {
         this.productId = productId;
+        this.vendorId = vendorId;
         this.clientId = clientId;
         this.orderDocument = orderDocument;
         this.DSA = DSA;
@@ -38,13 +41,21 @@ public class Order {
         return productId;
     }
 
+    public Long getVendorId() {
+        return vendorId;
+    }
+
     public Long getClientId() {
         return clientId;
     }
 
-    public byte[] getDSA () {return DSA;}
+    public byte[] getDSA() {
+        return DSA;
+    }
 
-    public String getOrderDocument () {return orderDocument;}
+    public String getOrderDocument() {
+        return orderDocument;
+    }
 
     public boolean isApproved() {
         return isApproved;

@@ -11,18 +11,15 @@ public class CreateReviewDTO {
     private Long productId;
     private Long replyFromReviewId;
 
-    private Long author;
-
     public CreateReviewDTO() {}
 
-    public CreateReviewDTO(String title, String description, int stars, Date datePublishing, Long productId, Long replyFromReviewId, Long author) {
+    public CreateReviewDTO(String title, String description, int stars, Date datePublishing, Long productId, Long replyFromReviewId) {
         this.title = title;
         this.description = description;
         this.stars = stars;
         this.datePublishing = datePublishing;
         this.productId = productId;
         this.replyFromReviewId = replyFromReviewId;
-        this.author = author;
     }
 
     public String getTitle() {
@@ -71,13 +68,5 @@ public class CreateReviewDTO {
 
     public void setReplyFromReviewId(Long replyFromReviewId) {
         this.replyFromReviewId = replyFromReviewId;
-    }
-
-    public Long getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Long author) {
-        this.author = author;
     }
 }

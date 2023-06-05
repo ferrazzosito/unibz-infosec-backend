@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -21,35 +19,35 @@ public class UserEntity {
 
     private String email;
 
-
-    private String _role;
+    private String role;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String salt;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private BigInteger publicKey;
+    @Column(length = 1024)
+    private String publicKey;
+
+    @Column(length = 1024)
+    private String nKey;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private BigInteger nKey;
-
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private BigInteger privateKey;
+    @Column(length = 1024)
+    private String privateKey;
 
     private int balance;
 
     public UserEntity(String email, String password, String salt, BigInteger privateKey, BigInteger publicKey, BigInteger nKey, int balance, String role) {
-  
-        this.publicKey = publicKey;
-        this.privateKey = privateKey;
-        this.nKey = nKey;
+        this.publicKey = publicKey.toString();
+        this.privateKey = privateKey.toString();
+        this.nKey = nKey.toString();
         this.email = email;
         this.password = password;
         this.salt = salt;
         this.balance = balance;
-        this._role = role;
+        this.role = role;
     }
 
     public Long getId() {
@@ -77,22 +75,22 @@ public class UserEntity {
     }
 
     public Role getRole() {
-        return Role.fromString(_role);
+        return Role.fromString(role);
     }
 
     public void setRole(String role) {
-        this._role = role;
+        this.role = role;
     }
 
     public BigInteger getPublicKey() {
-        return publicKey;
+        return new BigInteger(publicKey);
     }
 
     public BigInteger getPrivateKey() {
-        return privateKey;
+        return new BigInteger(privateKey);
     }
 
-    public BigInteger getNKey () {
-        return nKey;
+    public BigInteger getNKey() {
+        return new BigInteger(nKey);
     }
 }

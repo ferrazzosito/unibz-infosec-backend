@@ -8,8 +8,8 @@ public class UpdateOrderDTO extends CreateOrderDTO {
         super();
     }
 
-    public UpdateOrderDTO (Long id, Long productId, Long clientId) {
-        super(productId,clientId);
+    public UpdateOrderDTO(Long id, Long productId) {
+        super(productId);
         this.id = id;
     }
 
