@@ -37,10 +37,11 @@ public class UserController {
     public UserEntity updateUser(@PathVariable("id") Long id, @RequestBody UpdateUserDTO dto) {
         return manageUsers.updateUser(id,
                 RESTUtils.getLoggedUser(userRepository).getId(), dto.getBalance());
+    }
 
     @PostMapping("/update/{id}/{balance}")
     public UserEntity updateUser(@PathVariable("id") Long id,@PathVariable("balance") int balance){
-        return manageUsers.updateUser(id, balance);
+        return manageUsers.updateUser(id, RESTUtils.getLoggedUser(userRepository).getId(), balance);
     }
 
     @DeleteMapping("/delete/{id}")

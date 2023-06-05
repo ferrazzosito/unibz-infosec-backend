@@ -55,6 +55,8 @@ public class SecurityConfiguration {
                 authorizationManagerRequestMatcherRegistry
                         .requestMatchers("/auth/**")
                         .permitAll()
+                        .requestMatchers("/chat/**")
+                        .permitAll()
                         .anyRequest()
                         .authenticated());
         http.cors(httpSecurityCorsConfigurer ->
