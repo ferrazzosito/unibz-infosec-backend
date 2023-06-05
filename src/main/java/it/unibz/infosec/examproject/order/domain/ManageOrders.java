@@ -85,7 +85,7 @@ public class ManageOrders {
         }
 
         manageUsers.updateUser(order.getClientId(),
-                Math.negateExact(product.getCost()));
+                order.getClientId(), Math.negateExact(product.getCost()));
         order.setApproved(true);
         return orderRepository.save(order);
     }
