@@ -34,8 +34,9 @@ public class UserController {
     }
 
     @PostMapping("/update/{id}")
-    public UserEntity updateUser(@PathVariable("id") Long id, @RequestBody UpdateUserDTO dto){
-        return manageUsers.updateUser(id, dto.getBalance()); //?
+    public UserEntity updateUser(@PathVariable("id") Long id, @RequestBody UpdateUserDTO dto) {
+        return manageUsers.updateUser(id,
+                RESTUtils.getLoggedUser(userRepository).getId(), dto.getBalance());
     }
 
     @DeleteMapping("/delete/{id}")

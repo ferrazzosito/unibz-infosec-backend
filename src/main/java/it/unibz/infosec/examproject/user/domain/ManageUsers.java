@@ -39,8 +39,11 @@ public class ManageUsers {
         return validateUser(id);
     }
 
-    public UserEntity updateUser(Long id, int amountToAdd) {
+    public UserEntity updateUser(Long id, Long updaterId, int amountToAdd) {
         final UserEntity userEntity = validateUser(id);
+        if (!userEntity.getId().equals(updaterId)) {
+            throw new IllegalArgumentException("Only the user itself can update its info");
+        }
         userEntity.addToBalance(amountToAdd);
         return userRepository.save(userEntity);
     }
