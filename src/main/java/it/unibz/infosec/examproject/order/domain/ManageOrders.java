@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 public class ManageOrders {
@@ -115,7 +116,15 @@ public class ManageOrders {
     }
 
     public List<Order> getByCustomer(Long customerId) {
-        return orderRepository.findByClientId(customerId);
+        return orderRepository.findByClientId(customerId).stream().map(o ->
+                new OrderWithProductInfo(
+                        o.getProductId(),
+                        o.getVendorId(),
+                        o.getClientId(),
+                        o.getOrderDocument(),
+                        o.getDSA(),
+                        manageProducts.readProduct(o.getProductId())
+                )).collect(Collectors.toList());
     }
 
     public List<Order> getByVendor(Long vendorId) {
