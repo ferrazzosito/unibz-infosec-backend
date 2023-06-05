@@ -31,9 +31,9 @@ public class UserController {
 //        return manageUsers.createUser(dto.getEmail(), dto.getPassword());
 //    }
 
-    @PostMapping("/update/{id}")
-    public UserEntity updateUser(@PathVariable("id") Long id, @RequestBody UpdateUserDTO dto){
-        return manageUsers.updateUser(id, dto.getBalance()); //?
+    @PostMapping("/update/{id}/{balance}")
+    public UserEntity updateUser(@PathVariable("id") Long id,@PathVariable("balance") int balance){
+        return manageUsers.updateUser(id, balance);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -46,4 +46,9 @@ public class UserController {
         return searchUsers.findAll();
     }
 
+    @PostMapping("/transfer/{id}/{email}/{amount}")
+    public UserEntity transferMoney(@PathVariable("id") Long id, @PathVariable("email") String email, @PathVariable("amount") int amount) {
+        return manageUsers.sendAmount(id, email, amount);
+    }
+    
 }

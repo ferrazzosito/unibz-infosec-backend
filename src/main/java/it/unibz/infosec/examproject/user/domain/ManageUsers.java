@@ -67,4 +67,22 @@ public class ManageUsers {
         return userEntity;
     }
 
+    public UserEntity sendAmount (Long id, String recipientMail, int amount) {
+        UserEntity userEntity = validateUser(id);
+        if(userEntity.getBalance() > amount) {
+            Optional<UserEntity> maybeRecipient = userRepository.findByEmail(recipientMail);
+            if(maybeRecipient.isEmpty()) {
+                throw new IllegalArgumentException("Recipient with email '" + recipientMail + "' does not exist yet!");
+            } else {
+                userEntity = updateUser(id, -amount);
+                UserEntity recipient = updateUser(maybeRecipient.get().getId(), amount);
+                userRepository.save(recipient);
+            }
+        } else {
+            throw new IllegalArgumentException("User " + id + " balance is not sufficient!");
+        }
+        return userRepository.save(userEntity);
+    }
+
+
 }
