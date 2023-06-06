@@ -2,6 +2,7 @@ package it.unibz.infosec.examproject.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Optional;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -40,12 +43,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String getJwtFromRequest (HttpServletRequest request)  {
-        final String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
+    private String getJwtFromRequest(HttpServletRequest request)  {
+        return Arrays.stream(Optional.ofNullable(request.getCookies())
+                        .orElse(new Cookie[0]))
+                .filter(c -> "jwt".equalsIgnoreCase(c.getName()))
+                .map(Cookie::getValue)
+                .findFirst()
+                .orElse(null);
     }
 
 }
