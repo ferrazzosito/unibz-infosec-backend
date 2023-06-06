@@ -38,8 +38,9 @@ public class ProductController {
     }
 
     @PostMapping("/search")
-    public List<Product> findByName(@RequestBody SearchProductDTO searchProductDTO) {
-        return searchProducts.findByName(searchProductDTO.getQuery());
+    public SearchResultsDTO findByName(@RequestBody SearchProductDTO searchProductDTO) {
+        return new SearchResultsDTO(searchProducts.findByName(
+                searchProductDTO.getQuery()), searchProductDTO.getQuery());
     }
 
     @PostMapping("/create")
