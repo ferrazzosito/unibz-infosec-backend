@@ -10,9 +10,12 @@ import it.unibz.infosec.examproject.user.domain.Role;
 import it.unibz.infosec.examproject.user.domain.UserEntity;
 import it.unibz.infosec.examproject.user.domain.UserRepository;
 import it.unibz.infosec.examproject.util.RESTUtils;
+import org.owasp.encoder.Encoders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.HtmlUtils;
 
+import java.nio.CharBuffer;
 import java.util.List;
 
 @RestController
@@ -40,7 +43,9 @@ public class ProductController {
     @PostMapping("/search")
     public SearchResultsDTO findByName(@RequestBody SearchProductDTO searchProductDTO) {
         return new SearchResultsDTO(searchProducts.findByName(
-                searchProductDTO.getQuery()), searchProductDTO.getQuery());
+                searchProductDTO.getQuery()),
+                HtmlUtils.htmlEscape(searchProductDTO.getQuery())
+        );
     }
 
     @PostMapping("/create")
