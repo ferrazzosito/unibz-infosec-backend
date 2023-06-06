@@ -34,7 +34,12 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public Product findById(@PathVariable("id") Long id) {
-        return manageProducts.readProduct(id);
+        return searchProducts.findById(id);
+    }
+
+    @PostMapping("/search")
+    public List<Product> findByName(@RequestBody SearchProductDTO searchProductDTO) {
+        return searchProducts.findByName(searchProductDTO.getQuery());
     }
 
     @PostMapping("/create")

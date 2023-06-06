@@ -14,8 +14,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
@@ -31,10 +29,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String email = authentication.getName();
         String password = authentication.getCredentials().toString();
 
-        // Optional<UserEntity> maybeUser = userRepository.findByEmail(email);
-        Optional<UserEntity> maybeUser = unsafeUserRepository.findByEmail(email);
+        Optional<UserEntity> maybeUser = userRepository.findByEmail(email);
         if (maybeUser.isPresent()) {
-            Logger.getLogger("CustomAuthenticationProvider").log(Level.INFO, maybeUser.get().toString());
             UserEntity user = maybeUser.get();
             final String salt = user.getSalt();
             final String hashedPassword = Hashing.getDigest(password + salt);
