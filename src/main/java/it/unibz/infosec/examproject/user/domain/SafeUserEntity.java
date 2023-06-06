@@ -9,9 +9,11 @@ public class SafeUserEntity {
 
     private String email;
     private String role;
+    private int balance;
 
-    public SafeUserEntity(String email, String role) {
+    public SafeUserEntity(String email, String role, int balance) {
         this.email = email;
         this.role = role;
+        this.balance = balance;
     }
 }

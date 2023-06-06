@@ -80,8 +80,7 @@ public class ManageOrders {
             throw new Exception("Order digital signature is not valid!");
         }
 
-        manageUsers.updateUser(order.getClientId(),
-                order.getClientId(), Math.negateExact(product.getCost()));
+        manageUsers.updateUser(order.getClientId(), Math.negateExact(product.getCost()));
         order.setApproved(true);
         return orderRepository.save(order);
     }
@@ -120,9 +119,8 @@ public class ManageOrders {
     public List<Order> getByVendor(Long vendorId) {
         return orderRepository.findByVendorId(vendorId).stream().map(o -> {
             final UserEntity customer = manageUsers.readUser(o.getClientId());
-            return new OrderWithCustomerInfo(o,
-                    new SafeUserEntity(customer.getEmail(), customer.getRole().getName())
-            );
+            return new OrderWithCustomerInfo(o, new SafeUserEntity(
+                    customer.getEmail(), customer.getRole().getName(), customer.getBalance()));
         }).collect(Collectors.toList());
     }
 

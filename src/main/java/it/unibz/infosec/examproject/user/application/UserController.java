@@ -34,15 +34,19 @@ public class UserController {
         return manageUsers.readUser(RESTUtils.getLoggedUser(userRepository).getId());
     }
 
-    @PostMapping("/update/{id}")
-    public UserEntity updateUser(@PathVariable("id") Long id, @RequestBody UpdateUserDTO dto) {
-        return manageUsers.updateUser(id,
+    @PostMapping("/update")
+    public UserEntity updateUser(@RequestBody UpdateUserDTO dto) {
+        return manageUsers.updateUser(
                 RESTUtils.getLoggedUser(userRepository).getId(), dto.getBalance());
     }
 
-    @PostMapping("/update/{id}/{balance}")
-    public UserEntity updateUser(@PathVariable("id") Long id,@PathVariable("balance") int balance){
-        return manageUsers.updateUser(id, RESTUtils.getLoggedUser(userRepository).getId(), balance);
+    @PostMapping("/topup")
+    public SafeUserEntity updateUser(@RequestBody TopUpDTO topUpDTO) {
+        final UserEntity updated = manageUsers.updateUser(
+                RESTUtils.getLoggedUser(userRepository).getId(),
+                    topUpDTO.getBalanceIncrease());
+        return new SafeUserEntity(updated.getEmail(),
+                updated.getRole().getName(), updated.getBalance());
     }
 
     @DeleteMapping("/delete/{id}")

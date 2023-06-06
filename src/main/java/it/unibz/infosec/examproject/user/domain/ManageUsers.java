@@ -39,11 +39,8 @@ public class ManageUsers {
         return validateUser(id);
     }
 
-    public UserEntity updateUser(Long id, Long updaterId, int amountToAdd) {
+    public UserEntity updateUser(Long id, int amountToAdd) {
         final UserEntity userEntity = validateUser(id);
-        if (!userEntity.getId().equals(updaterId)) {
-            throw new IllegalArgumentException("Only the user itself can update its info");
-        }
         userEntity.addToBalance(amountToAdd);
         return userRepository.save(userEntity);
     }
@@ -61,10 +58,8 @@ public class ManageUsers {
             if (maybeRecipient.isEmpty()) {
                 throw new IllegalArgumentException("Recipient with email '" + recipientMail + "' does not exist yet!");
             } else {
-                userEntity = updateUser(id, id, -amount);
-                UserEntity recipient = updateUser(
-                        maybeRecipient.get().getId(),
-                            maybeRecipient.get().getId(), amount);
+                userEntity = updateUser(id, -amount);
+                UserEntity recipient = updateUser(maybeRecipient.get().getId(), amount);
                 userRepository.save(recipient);
             }
         } else {
