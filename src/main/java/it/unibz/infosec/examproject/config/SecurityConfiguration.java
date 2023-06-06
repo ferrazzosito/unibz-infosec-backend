@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
-
+/*
     @Autowired
     private CustomAuthenticationProvider authProvider;
     private CustomUserDetailsService customUserDetailsService;
@@ -78,5 +78,5 @@ public class SecurityConfiguration {
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter();
     }
-
+*/
 }
