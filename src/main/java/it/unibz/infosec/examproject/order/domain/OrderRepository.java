@@ -24,4 +24,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @NonNull
     List<Order> findByVendorIdAndIsApprovedFalse(@NonNull Long vendor);
+
+    @NonNull
+    List<Order> findByProductId(@NonNull Long productId);
 }

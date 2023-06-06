@@ -64,12 +64,6 @@ public class ManageOrders {
                 "COST: " + product.getCost() + "\n" +
                 "VENDOR: " + product.getVendorId() + "\n" +
                 "BUYER: " + client.getId();
-//        final String orderPayload;
-//        try {
-//            orderPayload = objectMapper.writeValueAsString(new Invoice(product, client, new Date()));
-//        } catch (JsonProcessingException e) {
-//            throw new IllegalStateException("Could not create an invoice for this order");
-//        }
 
         String digest = Hashing.getDigest(orderDocument);
         byte[] DSA = RSA.encrypt(digest, client.getPrivateKey(), client.getNKey());
@@ -130,6 +124,10 @@ public class ManageOrders {
                     new SafeUserEntity(customer.getEmail(), customer.getRole().getName())
             );
         }).collect(Collectors.toList());
+    }
+
+    public List<Order> getByProduct(Long productId) {
+        return orderRepository.findByProductId(productId);
     }
 
     public List<Order> getApprovedByVendor(Long vendorId) {
