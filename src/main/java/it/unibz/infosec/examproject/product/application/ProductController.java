@@ -54,7 +54,7 @@ public class ProductController {
         if (loggedUser.getRole() != Role.VENDOR) {
             throw new IllegalArgumentException("Wrong user type for this operation");
         }
-        return manageProducts.createProduct(dto.getName(), dto.getCost(), loggedUser.getId());
+        return manageProducts.createProduct(HtmlUtils.htmlEscape(dto.getName()), dto.getCost(), loggedUser.getId());
     }
 
     @PostMapping("/update/{id}")
@@ -62,7 +62,7 @@ public class ProductController {
         return manageProducts.updateProduct(
                 id,
                 RESTUtils.getLoggedUser(userRepository).getId(),
-                dto.getName(),
+                HtmlUtils.htmlEscape(dto.getName()),
                 dto.getCost()
         );
     }
