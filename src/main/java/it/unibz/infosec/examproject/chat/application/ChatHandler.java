@@ -84,6 +84,7 @@ public class ChatHandler extends TextWebSocketHandler {
         } else {
             this.sessions.put(chatId, sockets);
         }
+        this.manageChatRequests.deleteChatRequest(chatId);
         logger.log(Level.INFO, String.format("Closed connection with %s, now %d subscribers for id %s",
                 session.getRemoteAddress().toString(), sockets.size(), chatId));
     }
