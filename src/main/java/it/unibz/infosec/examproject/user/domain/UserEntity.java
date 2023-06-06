@@ -21,7 +21,6 @@ public class UserEntity {
 
     private String role;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

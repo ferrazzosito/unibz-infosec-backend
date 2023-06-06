@@ -1,5 +1,6 @@
 package it.unibz.infosec.examproject.security;
 
+import it.unibz.infosec.examproject.user.domain.UnsafeUserRepository;
 import it.unibz.infosec.examproject.user.domain.UserEntity;
 import it.unibz.infosec.examproject.user.domain.UserRepository;
 import it.unibz.infosec.examproject.util.crypto.hashing.Hashing;
@@ -13,14 +14,15 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UnsafeUserRepository unsafeUserRepository;
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -29,7 +31,6 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         Optional<UserEntity> maybeUser = userRepository.findByEmail(email);
         if (maybeUser.isPresent()) {
-            Logger.getLogger("CustomAuthenticationProvider").log(Level.INFO, maybeUser.get().toString());
             UserEntity user = maybeUser.get();
             final String salt = user.getSalt();
             final String hashedPassword = Hashing.getDigest(password + salt);

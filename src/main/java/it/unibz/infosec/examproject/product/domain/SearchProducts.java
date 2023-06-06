@@ -10,24 +10,29 @@ import java.util.Optional;
 public class SearchProducts {
 
     private final ProductRepository productRepository;
+    private final UnsafeProductRepository unsafeProductRepository;
 
     @Autowired
-    public SearchProducts(ProductRepository productRepository) {
+    public SearchProducts(ProductRepository productRepository, UnsafeProductRepository unsafeProductRepository) {
         this.productRepository = productRepository;
+        this.unsafeProductRepository = unsafeProductRepository;
     }
 
     public Product findById(Long id) {
-        Optional<Product> searchedProduct = productRepository.findById(id);
-
-        if(searchedProduct.isEmpty()){
+        final Optional<Product> searchedProduct = productRepository.findById(id);
+        if (searchedProduct.isEmpty()) {
             throw new IllegalArgumentException("Product with id " + id + " is not present in the database");
         }
         return searchedProduct.get();
     }
 
-    public List<Product> findAll(){
+    public List<Product> findByName(String query) {
+        return unsafeProductRepository.findByName(query);
+    }
+
+    public List<Product> findAll() {
         List<Product> list = productRepository.findAll();
-        if(list.isEmpty()){
+        if (list.isEmpty()) {
             throw new IllegalArgumentException("No products in database");
         }
         return list;

@@ -1,5 +1,6 @@
 package it.unibz.infosec.examproject.user.auth;
 
+import it.unibz.infosec.examproject.product.domain.UnsafeProductRepository;
 import it.unibz.infosec.examproject.security.JwtGenerator;
 import it.unibz.infosec.examproject.user.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +25,22 @@ import java.util.List;
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
+
     private final UserRepository userRepository;
+    private final UnsafeUserRepository unsafeUserRepository;
+
     private final ManageUsers manageUsers;
     private final JwtGenerator jwtGenerator;
 
     @Autowired
-    public AuthController(AuthenticationManager authenticationManager, UserRepository userRepository, ManageUsers manageUsers, JwtGenerator jwtGenerator) {
+    public AuthController(AuthenticationManager authenticationManager,
+                          UserRepository userRepository,
+                          UnsafeUserRepository unsafeProductRepository,
+                          ManageUsers manageUsers,
+                          JwtGenerator jwtGenerator) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
+        this.unsafeUserRepository = unsafeProductRepository;
         this.manageUsers = manageUsers;
         this.jwtGenerator = jwtGenerator;
     }
