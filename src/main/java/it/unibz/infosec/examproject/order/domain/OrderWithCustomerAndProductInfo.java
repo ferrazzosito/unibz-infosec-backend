@@ -13,7 +13,7 @@ public class OrderWithCustomerAndProductInfo extends Order {
     private Product product;
 
     public OrderWithCustomerAndProductInfo(Order order, SafeUserEntity customer, Product product) {
-        super(order.getProductId(), order.getVendorId(), order.getClientId(), order.getOrderDocument(), order.getDSA());
+        super(order.getProductId(), order.getVendorId(), order.getClientId(), order.getOrderDocument(), order.getDSA(), order.isApproved());
         this.id = order.getId();
         this.customer = customer;
         this.product = product;
