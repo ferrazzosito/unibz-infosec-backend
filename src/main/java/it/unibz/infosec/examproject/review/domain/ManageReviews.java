@@ -1,13 +1,17 @@
 package it.unibz.infosec.examproject.review.domain;
 
 import it.unibz.infosec.examproject.product.domain.ManageProducts;
+import it.unibz.infosec.examproject.product.domain.ReviewWithCustomerInfo;
 import it.unibz.infosec.examproject.user.domain.ManageUsers;
+import it.unibz.infosec.examproject.user.domain.SafeUserEntity;
+import it.unibz.infosec.examproject.user.domain.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ManageReviews {
@@ -73,7 +77,12 @@ public class ManageReviews {
     }
 
     public List<Review> getByProduct(Long productId) {
-        return reviewRepository.findByProductId(productId);
+        return reviewRepository.findByProductId(productId).stream()
+                .map(r -> {
+                    final UserEntity user = manageUsers.readUser(r.getAuthor());
+                    return new ReviewWithCustomerInfo(r, new SafeUserEntity(
+                            user.getEmail(), user.getRole().getName(), user.getBalance()));
+                }).collect(Collectors.toList());
     }
 
     public List<Review> getReplies(Long reviewId) {
