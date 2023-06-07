@@ -2,7 +2,6 @@ package it.unibz.infosec.examproject.order.domain;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.unibz.infosec.examproject.product.domain.ManageProducts;
 import it.unibz.infosec.examproject.product.domain.Product;
@@ -14,7 +13,6 @@ import it.unibz.infosec.examproject.util.crypto.rsa.RSA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -119,8 +117,13 @@ public class ManageOrders {
     public List<Order> getByVendor(Long vendorId) {
         return orderRepository.findByVendorId(vendorId).stream().map(o -> {
             final UserEntity customer = manageUsers.readUser(o.getClientId());
-            return new OrderWithCustomerInfo(o, new SafeUserEntity(
-                    customer.getEmail(), customer.getRole().getName(), customer.getBalance()));
+            final Product product = manageProducts.readProduct(o.getProductId());
+            return new OrderWithCustomerAndProductInfo(o,
+                    new SafeUserEntity(
+                        customer.getEmail(),
+                        customer.getRole().getName(),
+                        customer.getBalance()),
+                    product);
         }).collect(Collectors.toList());
     }
 
