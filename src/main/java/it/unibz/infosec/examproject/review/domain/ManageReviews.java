@@ -90,6 +90,11 @@ public class ManageReviews {
     }
 
     public List<Review> getReplies(Long reviewId) {
-        return reviewRepository.findByReplyFromReviewId(reviewId);
+        return reviewRepository.findByReplyFromReviewId(reviewId).stream()
+                .map(r -> {
+                    final UserEntity user = manageUsers.readUser(r.getAuthor());
+                    return new ReviewWithCustomerInfo(r, new SafeUserEntity(
+                            user.getEmail(), user.getRole().getName(), user.getBalance()));
+                }).collect(Collectors.toList());
     }
 }
