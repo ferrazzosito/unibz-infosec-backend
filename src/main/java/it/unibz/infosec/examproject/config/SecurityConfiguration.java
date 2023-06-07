@@ -21,8 +21,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.RequestMatchers;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Configuration
@@ -61,10 +63,16 @@ public class SecurityConfiguration {
                         .authenticated());
         http.cors(httpSecurityCorsConfigurer ->
                 httpSecurityCorsConfigurer.configurationSource(
-                        request -> new CorsConfiguration().applyPermitDefaultValues()));
+                        request -> {
+                            CorsConfiguration corsConfig = new CorsConfiguration().applyPermitDefaultValues();
+                            corsConfig.setAllowCredentials(true); // Enable credentials
+                            return corsConfig;
+                        }));
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
+
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {

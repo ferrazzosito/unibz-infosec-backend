@@ -38,7 +38,7 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
                                        @NonNull WebSocketHandler wsHandler,
                                        Exception exception) {
             }
-        }).setAllowedOrigins("*");
+        }).setAllowedOrigins("http://localhost:3000");
     }
 
     @Bean

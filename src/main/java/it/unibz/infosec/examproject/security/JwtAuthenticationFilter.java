@@ -44,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
                 if(!csrfFound) {
                     logger.info("dio");
-                    throw new IllegalStateException("dio capra");
+                    throw new IllegalStateException("Error");
                 }
             }
             final UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
