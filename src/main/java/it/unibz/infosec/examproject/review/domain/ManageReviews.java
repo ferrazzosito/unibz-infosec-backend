@@ -1,7 +1,6 @@
 package it.unibz.infosec.examproject.review.domain;
 
 import it.unibz.infosec.examproject.product.domain.ManageProducts;
-import it.unibz.infosec.examproject.product.domain.ReviewWithCustomerInfo;
 import it.unibz.infosec.examproject.user.domain.ManageUsers;
 import it.unibz.infosec.examproject.user.domain.SafeUserEntity;
 import it.unibz.infosec.examproject.user.domain.UserEntity;
@@ -73,7 +72,12 @@ public class ManageReviews {
     }
 
     public List<Review> getByCustomer(Long customerId) {
-        return reviewRepository.findByAuthor(customerId);
+        return reviewRepository.findByAuthor(customerId).stream()
+                .map(r -> {
+                    final UserEntity user = manageUsers.readUser(r.getAuthor());
+                    return new ReviewWithCustomerInfo(r, new SafeUserEntity(
+                            user.getEmail(), user.getRole().getName(), user.getBalance()));
+                }).collect(Collectors.toList());
     }
 
     public List<Review> getByProduct(Long productId) {
