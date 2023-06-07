@@ -20,6 +20,11 @@ public class Product {
 
     public Product () {}
 
+    public Product(Long id, String name, int cost, Long vendorId) {
+        this(name, cost, vendorId);
+        this.id = id;
+    }
+
     public Product(String name, int cost, Long vendorId) {
         this.name = name;
         this.cost = cost;
