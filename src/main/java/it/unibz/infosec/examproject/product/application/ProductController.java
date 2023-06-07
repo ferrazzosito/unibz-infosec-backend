@@ -40,10 +40,16 @@ public class ProductController {
 
     @PostMapping("/search")
     public SearchResultsDTO findByName(@RequestBody SearchProductDTO searchProductDTO) {
-        return new SearchResultsDTO(searchProducts.findByName(
-                searchProductDTO.getQuery()),
-                HtmlUtils.htmlEscape(searchProductDTO.getQuery())
-        );
+        return new SearchResultsDTO(searchProducts
+                .findByName(searchProductDTO.getQuery()),
+                    HtmlUtils.htmlEscape(searchProductDTO.getQuery()));
+    }
+
+    @PostMapping("/mine/search")
+    public SearchResultsDTO findMyProductsByName(@RequestBody SearchProductDTO searchProductDTO) {
+        return new SearchResultsDTO(searchProducts.findByNameAndVendor(
+                searchProductDTO.getQuery(), RESTUtils.getLoggedUser(userRepository).getId()),
+                    HtmlUtils.htmlEscape(searchProductDTO.getQuery()));
     }
 
     @PostMapping("/create")

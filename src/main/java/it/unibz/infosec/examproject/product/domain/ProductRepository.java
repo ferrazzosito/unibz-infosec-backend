@@ -15,4 +15,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @NonNull
     List<Product> findByVendorId(@NonNull Long vendorId);
+
+    @NonNull
+    List<Product> findByNameAndVendorId(@NonNull String name, @NonNull Long vendorId);
 }

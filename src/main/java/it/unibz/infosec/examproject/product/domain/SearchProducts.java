@@ -30,6 +30,10 @@ public class SearchProducts {
         return unsafeProductRepository.findByName(query);
     }
 
+    public List<Product> findByNameAndVendor(String query, Long vendorId) {
+        return unsafeProductRepository.findByNameAndVendorId(query, vendorId);
+    }
+
     public List<Product> findAll() {
         List<Product> list = productRepository.findAll();
         if (list.isEmpty()) {
