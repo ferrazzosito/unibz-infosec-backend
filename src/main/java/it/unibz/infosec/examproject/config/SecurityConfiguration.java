@@ -66,8 +66,9 @@ public class SecurityConfiguration {
                 httpSecurityCorsConfigurer.configurationSource(
                         request -> {
                             CorsConfiguration corsConfig = new CorsConfiguration().applyPermitDefaultValues();
-                            corsConfig.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                            // corsConfig.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
                             corsConfig.setAllowCredentials(true); // Enable credentials
+                            corsConfig.setAllowedOriginPatterns(Collections.singletonList("http://*:[*]"));
                             return corsConfig;
                         }));
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
