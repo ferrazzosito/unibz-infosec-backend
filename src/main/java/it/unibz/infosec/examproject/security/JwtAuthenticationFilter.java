@@ -36,19 +36,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (StringUtils.hasText(token) && tokenGenerator.validateToken(token)) {
             final String email = tokenGenerator.getEmailFromJwt(token);
             final String csrf = tokenGenerator.getCsrfTokenFromJwt(token);
-            if(request.getMethod().equalsIgnoreCase("post")) {
-               /*
-                boolean csrfFound = false;
-                for(Cookie cookie : request.getCookies()) {
-                    if("csrf".equals(cookie.getName()))
-                        csrfFound = true;
+            if (request.getMethod().equalsIgnoreCase("post")) {
+                String sentCsrf = null;
+                for (Cookie cookie : request.getCookies()) {
+                    if ("csrf".equals(cookie.getName())) {
+                        sentCsrf = cookie.getValue();
+                    }
                 }
-                if(!csrfFound) {
-                    logger.info("dio");
-                    throw new IllegalStateException("Error");
+                if (sentCsrf == null || !sentCsrf.equals(csrf)) {
+                    throw new IllegalStateException("CSRF Token check failed");
                 }
-                */
-
             }
             final UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
             final UsernamePasswordAuthenticationToken authenticationToken =
