@@ -17,20 +17,18 @@ public class SearchOrders {
     }
 
     public Order findById(Long id) {
-        Optional<Order> searchedOrder = orderRepository.findById(id);
-
-        if(searchedOrder.isEmpty()){
+        final Optional<Order> searchedOrder = orderRepository.findById(id);
+        if (searchedOrder.isEmpty()) {
             throw new IllegalArgumentException("Order with id " + id + " is not present in the database");
         }
         return searchedOrder.get();
     }
 
-    public List<Order> findAll(){
+    public List<Order> findAll() {
         List<Order> list = orderRepository.findAll();
-        if(list.isEmpty()){
+        if (list.isEmpty()) {
             throw new IllegalArgumentException("No orders in database");
         }
         return list;
     }
-
 }

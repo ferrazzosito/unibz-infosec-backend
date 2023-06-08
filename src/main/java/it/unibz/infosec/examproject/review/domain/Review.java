@@ -12,11 +12,13 @@ public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
     private String title;
 
     private String description;
+
+    private int stars;
 
     private Date datePublishing;
 
@@ -24,14 +26,18 @@ public class Review {
 
     private Long replyFromReviewId;
 
+    private Long author;
+
     public Review() {}
 
-    public Review(String title, String description, Date datePublishing, Long productId, Long replyFromReviewId) {
+    public Review(String title, String description, int stars, Date datePublishing, Long productId, Long replyFromReviewId, Long author) {
         this.title = title;
         this.description = description;
+        this.stars = stars;
         this.datePublishing = datePublishing;
         this.productId = productId;
         this.replyFromReviewId = replyFromReviewId;
+        this.author = author;
     }
 
     public Long getId() {
@@ -54,6 +60,8 @@ public class Review {
         return description;
     }
 
+    public int getStars() { return stars; }
+
     public Date getDatePublishing() {
         return datePublishing;
     }
@@ -64,5 +72,9 @@ public class Review {
 
     public Long getReplyFromReviewId() {
         return replyFromReviewId;
+    }
+
+    public Long getAuthor() {
+        return author;
     }
 }

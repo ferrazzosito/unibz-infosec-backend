@@ -1,5 +1,9 @@
 package it.unibz.infosec.examproject.user.domain;
 
+import it.unibz.infosec.examproject.util.crypto.RandomUtils;
+import it.unibz.infosec.examproject.util.crypto.hashing.Hashing;
+import it.unibz.infosec.examproject.util.crypto.rsa.RSA;
+import it.unibz.infosec.examproject.util.crypto.rsa.RSAKeyPair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,7 +12,7 @@ import java.util.Optional;
 @Service
 public class ManageUsers {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     private SearchUsers searchUsers;
 
     @Autowired
@@ -16,47 +20,51 @@ public class ManageUsers {
         this.userRepository = userRepository;
     }
 
-    private User validateUser (Long id) {
-
-        Optional<User> maybeUser = userRepository.findById(id);
-
-        if(maybeUser.isEmpty())
+    private UserEntity validateUser(Long id) {
+        final Optional<UserEntity> maybeUser = userRepository.findById(id);
+        if (maybeUser.isEmpty())
             throw new IllegalArgumentException("User with id '" + id + "' does not exist yet!");
-
         return maybeUser.get();
     }
 
-    public User createUser(String email, String password, int type) {
+    public UserEntity createUser(String email, String password, Role role) {
+        final String salt = RandomUtils.generateRandomSalt(32);
+        final String hashedPassword = Hashing.getDigest(password + salt);
 
-        //TODO: hash password, generate salt,...
-
-        return userRepository.save(new User(email, password, "sds", 0, type));
+        final RSAKeyPair keyPair = RSA.generateKeys(1024);
+        return userRepository.save(new UserEntity(email, hashedPassword, salt, keyPair.getPrivateExponent(), keyPair.getPublicExponent(), keyPair.getN(),0, role.getName()));
     }
 
-    public User readUser(Long id) {
-
-        User user = validateUser(id);
-
-        return user;
-
+    public UserEntity readUser(Long id) {
+        return validateUser(id);
     }
 
-    public User updateUser (Long id, int amountToAdd) {
-
-        User user = validateUser(id);
-
-        user.addToBalance(amountToAdd);
-
-        return userRepository.save(user);
+    public UserEntity updateUser(Long id, int amountToAdd) {
+        final UserEntity userEntity = validateUser(id);
+        userEntity.addToBalance(amountToAdd);
+        return userRepository.save(userEntity);
     }
 
-    public User deleteUser (Long id) {
-
-        User user = validateUser(id);
-
-        userRepository.delete(user);
-
-        return user;
+    public UserEntity deleteUser(Long id) {
+        final UserEntity userEntity = validateUser(id);
+        userRepository.delete(userEntity);
+        return userEntity;
     }
 
+    public UserEntity sendAmount(Long id, String recipientMail, int amount) {
+        UserEntity userEntity = validateUser(id);
+        if (userEntity.getBalance() > amount) {
+            Optional<UserEntity> maybeRecipient = userRepository.findByEmail(recipientMail);
+            if (maybeRecipient.isEmpty()) {
+                throw new IllegalArgumentException("Recipient with email '" + recipientMail + "' does not exist yet!");
+            } else {
+                userEntity = updateUser(id, -amount);
+                UserEntity recipient = updateUser(maybeRecipient.get().getId(), amount);
+                userRepository.save(recipient);
+            }
+        } else {
+            throw new IllegalArgumentException("User " + id + " balance is not sufficient!");
+        }
+        return userRepository.save(userEntity);
+    }
 }

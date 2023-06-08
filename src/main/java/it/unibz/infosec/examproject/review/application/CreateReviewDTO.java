@@ -6,15 +6,17 @@ public class CreateReviewDTO {
 
     private String title;
     private String description;
+    private int stars;
     private Date datePublishing;
     private Long productId;
     private Long replyFromReviewId;
 
     public CreateReviewDTO() {}
 
-    public CreateReviewDTO(String title, String description, Date datePublishing, Long productId, Long replyFromReviewId) {
+    public CreateReviewDTO(String title, String description, int stars, Date datePublishing, Long productId, Long replyFromReviewId) {
         this.title = title;
         this.description = description;
+        this.stars = stars;
         this.datePublishing = datePublishing;
         this.productId = productId;
         this.replyFromReviewId = replyFromReviewId;
@@ -34,6 +36,14 @@ public class CreateReviewDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getStars() {
+        return stars;
+    }
+
+    public void setStars(int stars) {
+        this.stars = stars;
     }
 
     public Date getDatePublishing() {
