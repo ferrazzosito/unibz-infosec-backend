@@ -28,11 +28,10 @@ public class ManageUsers {
     }
 
     public UserEntity createUser(String email, String password, Role role) {
-        final String salt = RandomUtils.generateRandomSalt(32);
-        final String hashedPassword = Hashing.getDigest(password + salt);
+        final String hashedPassword = Hashing.getDigest(password);
 
         final RSAKeyPair keyPair = RSA.generateKeys(1024);
-        return userRepository.save(new UserEntity(email, hashedPassword, salt, keyPair.getPrivateExponent(), keyPair.getPublicExponent(), keyPair.getN(),0, role.getName()));
+        return userRepository.save(new UserEntity(email, hashedPassword, "", keyPair.getPrivateExponent(), keyPair.getPublicExponent(), keyPair.getN(),0, role.getName()));
     }
 
     public UserEntity readUser(Long id) {
