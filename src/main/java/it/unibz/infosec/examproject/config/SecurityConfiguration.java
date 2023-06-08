@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.stream.Collectors;
 
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
@@ -65,6 +66,7 @@ public class SecurityConfiguration {
                 httpSecurityCorsConfigurer.configurationSource(
                         request -> {
                             CorsConfiguration corsConfig = new CorsConfiguration().applyPermitDefaultValues();
+                            corsConfig.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
                             corsConfig.setAllowCredentials(true); // Enable credentials
                             return corsConfig;
                         }));
