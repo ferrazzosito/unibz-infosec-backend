@@ -72,10 +72,14 @@ public class ManageOrders {
     public Order approveOrder(Long idOrder) throws Exception {
         final Order order = readOrder(idOrder);
         final Product product = manageProducts.readProduct(order.getProductId());
+        final UserEntity customer = manageUsers.readUser(order.getClientId());
         final boolean orderValidity = isSignatureOrderValid(order.getId());
 
         if (!orderValidity) {
             throw new Exception("Order digital signature is not valid!");
+        }
+        if (customer.getBalance() < product.getCost()) {
+            throw new IllegalArgumentException("Insufficient balance to place this order!");
         }
 
         manageUsers.updateUser(order.getClientId(), Math.negateExact(product.getCost()));

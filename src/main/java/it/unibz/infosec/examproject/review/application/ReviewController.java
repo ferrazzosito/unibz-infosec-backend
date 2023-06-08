@@ -1,7 +1,5 @@
 package it.unibz.infosec.examproject.review.application;
 
-import it.unibz.infosec.examproject.product.application.SearchProductDTO;
-import it.unibz.infosec.examproject.product.application.SearchResultsDTO;
 import it.unibz.infosec.examproject.review.domain.ManageReviews;
 import it.unibz.infosec.examproject.review.domain.Review;
 import it.unibz.infosec.examproject.review.domain.SearchReviews;
@@ -9,7 +7,6 @@ import it.unibz.infosec.examproject.user.domain.UserRepository;
 import it.unibz.infosec.examproject.util.RESTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
 
@@ -36,8 +33,8 @@ public class ReviewController {
     @PostMapping("/create")
     public Review createNewReview(@RequestBody CreateReviewDTO dto) {
         return manageReviews.createReview(
-                HtmlUtils.htmlEscape(dto.getTitle()),
-                HtmlUtils.htmlEscape(dto.getDescription()),
+                dto.getTitle(),
+                dto.getDescription(),
                 dto.getStars(),
                 dto.getDatePublishing(), dto.getProductId(),
                 dto.getReplyFromReviewId(),
@@ -47,10 +44,8 @@ public class ReviewController {
     @PostMapping("/update/{id}")
     public Review updateReview(@PathVariable("id") Long id, @RequestBody UpdateReviewDTO dto) {
         return manageReviews.updateReview(id,
-                RESTUtils.getLoggedUser(
-                    userRepository).getId(),
-                    HtmlUtils.htmlEscape(dto.getTitle()),
-                    HtmlUtils.htmlEscape(dto.getDescription()));
+                RESTUtils.getLoggedUser(userRepository).getId(),
+                    dto.getTitle(), dto.getDescription());
     }
 
     @DeleteMapping("/delete/{id}")
@@ -66,6 +61,11 @@ public class ReviewController {
     @GetMapping("/mine")
     public List<Review> getByCustomer() {
         return manageReviews.getByCustomer(RESTUtils.getLoggedUser(userRepository).getId());
+    }
+
+    @GetMapping("/product/{id}")
+    public List<Review> getByProduct(@PathVariable("id") Long id) {
+        return manageReviews.getByProduct(id);
     }
 
     @GetMapping("/{id}/replies")

@@ -11,7 +11,7 @@ public class OrderWithProductInfo extends Order {
     private Product product;
 
     public OrderWithProductInfo(Order order, Product product) {
-        super(order.getProductId(), order.getVendorId(), order.getClientId(), order.getOrderDocument(), order.getDSA());
+        super(order.getProductId(), order.getVendorId(), order.getClientId(), order.getOrderDocument(), order.getDSA(), order.isApproved());
         this.id = order.getId();
         this.product = product;
     }

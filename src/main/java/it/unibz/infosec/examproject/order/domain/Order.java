@@ -33,6 +33,15 @@ public class Order {
         this.isApproved = false;
     }
 
+    public Order(Long productId, Long vendorId, Long clientId, String orderDocument, byte[] DSA, boolean isApproved) {
+        this.productId = productId;
+        this.vendorId = vendorId;
+        this.clientId = clientId;
+        this.orderDocument = orderDocument;
+        this.DSA = DSA;
+        this.isApproved = isApproved;
+    }
+
     public Long getId() {
         return id;
     }

@@ -1,6 +1,5 @@
 package it.unibz.infosec.examproject.product.application;
 
-
 import it.unibz.infosec.examproject.product.domain.ManageProducts;
 import it.unibz.infosec.examproject.product.domain.Product;
 import it.unibz.infosec.examproject.product.domain.SearchProducts;
@@ -12,7 +11,6 @@ import it.unibz.infosec.examproject.user.domain.UserRepository;
 import it.unibz.infosec.examproject.util.RESTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.HtmlUtils;
 
 import java.util.List;
 
@@ -41,15 +39,14 @@ public class ProductController {
     @PostMapping("/search")
     public SearchResultsDTO findByName(@RequestBody SearchProductDTO searchProductDTO) {
         return new SearchResultsDTO(searchProducts
-                .findByName(searchProductDTO.getQuery()),
-                    HtmlUtils.htmlEscape(searchProductDTO.getQuery()));
+                .findByName(searchProductDTO.getQuery()), searchProductDTO.getQuery());
     }
 
     @PostMapping("/mine/search")
     public SearchResultsDTO findMyProductsByName(@RequestBody SearchProductDTO searchProductDTO) {
         return new SearchResultsDTO(searchProducts.findByNameAndVendor(
                 searchProductDTO.getQuery(), RESTUtils.getLoggedUser(userRepository).getId()),
-                    HtmlUtils.htmlEscape(searchProductDTO.getQuery()));
+                    searchProductDTO.getQuery());
     }
 
     @PostMapping("/create")
@@ -58,7 +55,7 @@ public class ProductController {
         if (loggedUser.getRole() != Role.VENDOR) {
             throw new IllegalArgumentException("Wrong user type for this operation");
         }
-        return manageProducts.createProduct(HtmlUtils.htmlEscape(dto.getName()), dto.getCost(), loggedUser.getId());
+        return manageProducts.createProduct(dto.getName(), dto.getCost(), loggedUser.getId());
     }
 
     @PostMapping("/update/{id}")
@@ -66,7 +63,7 @@ public class ProductController {
         return manageProducts.updateProduct(
                 id,
                 RESTUtils.getLoggedUser(userRepository).getId(),
-                HtmlUtils.htmlEscape(dto.getName()),
+                dto.getName(),
                 dto.getCost()
         );
     }
