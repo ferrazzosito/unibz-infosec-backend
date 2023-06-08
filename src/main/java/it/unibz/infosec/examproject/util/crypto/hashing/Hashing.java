@@ -6,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 
 public class Hashing {
 
-    private static final String HASH_ALGORITHM = "SHA256";
+    private static final String HASH_ALGORITHM = "MD5";
     
     public static String getDigest(String inputString) {
         final MessageDigest md;
