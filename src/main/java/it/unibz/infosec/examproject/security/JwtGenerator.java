@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import it.unibz.infosec.examproject.user.domain.UserEntity;
+import it.unibz.infosec.examproject.util.crypto.RandomUtils;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -21,10 +22,14 @@ public class JwtGenerator {
         final Date currentDate = new Date();
         final Date expireDate = new Date(currentDate.getTime() + SecurityConstants.JWT_EXPIRATION);
 
+        final String csrfToken = RandomUtils.generateRandomSalt(32);
+        //
         final HashMap<String, Object> claims = new HashMap<>();
         claims.put("id", user.getId());
         claims.put("role", user.getRole().getName());
+        claims.put("csrf", csrfToken);
 
+        //csrf token
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date())
@@ -40,6 +45,14 @@ public class JwtGenerator {
                 .parseClaimsJws(token)
                 .getBody();
         return claims.getSubject();
+    }
+
+    public String getCsrfTokenFromJwt(String jwt) {
+        final Claims claims = Jwts.parser()
+                .setSigningKey(SecurityConstants.JWT_SECRET)
+                .parseClaimsJws(jwt)
+                .getBody();
+        return claims.get("csrf", String.class);
     }
 
     public boolean validateToken(String token) {

@@ -63,6 +63,11 @@ public class ReviewController {
         return manageReviews.getByCustomer(RESTUtils.getLoggedUser(userRepository).getId());
     }
 
+    @GetMapping("/product/{id}")
+    public List<Review> getByProduct(@PathVariable("id") Long id) {
+        return manageReviews.getByProduct(id);
+    }
+
     @GetMapping("/{id}/replies")
     public List<Review> getReplies(@PathVariable("id") Long id) {
         return manageReviews.getReplies(id);

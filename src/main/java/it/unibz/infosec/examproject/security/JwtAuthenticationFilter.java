@@ -2,6 +2,7 @@ package it.unibz.infosec.examproject.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Optional;
 
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -24,12 +27,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private CustomUserDetailsService customUserDetailsService;
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request,
-                                    @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain) throws ServletException, IOException {
+    public void doFilterInternal(@NonNull HttpServletRequest request,
+                                 @NonNull HttpServletResponse response,
+                                 @NonNull FilterChain filterChain) throws ServletException, IOException {
         final String token = getJwtFromRequest(request);
+
+        logger.info(token);
         if (StringUtils.hasText(token) && tokenGenerator.validateToken(token)) {
             final String email = tokenGenerator.getEmailFromJwt(token);
+            final String csrf = tokenGenerator.getCsrfTokenFromJwt(token);
+            if(request.getMethod().equalsIgnoreCase("post")) {
+               /*
+                boolean csrfFound = false;
+                for(Cookie cookie : request.getCookies()) {
+                    if("csrf".equals(cookie.getName()))
+                        csrfFound = true;
+                }
+                if(!csrfFound) {
+                    logger.info("dio");
+                    throw new IllegalStateException("Error");
+                }
+                */
+
+            }
             final UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
             final UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(userDetails,
@@ -41,11 +61,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     private String getJwtFromRequest (HttpServletRequest request)  {
-        final String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
+
+        String cookie = Arrays.stream(Optional.ofNullable(request.getCookies())
+                        .orElse(new Cookie[0]))
+                .filter(c -> "jwt".equalsIgnoreCase(c.getName()))
+                .map(Cookie::getValue)
+                .findFirst()
+                .orElse(null);
+        return cookie;
+
     }
 
 }
