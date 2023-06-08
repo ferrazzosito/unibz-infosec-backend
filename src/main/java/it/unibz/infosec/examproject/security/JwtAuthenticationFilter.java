@@ -37,12 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             final String email = tokenGenerator.getEmailFromJwt(token);
             final String csrf = tokenGenerator.getCsrfTokenFromJwt(token);
             if (request.getMethod().equalsIgnoreCase("post")) {
-                String sentCsrf = null;
-                for (Cookie cookie : request.getCookies()) {
-                    if ("csrf".equals(cookie.getName())) {
-                        sentCsrf = cookie.getValue();
-                    }
-                }
+                final String sentCsrf = request.getHeader("X-CSRF-Token");
                 if (sentCsrf == null || !sentCsrf.equals(csrf)) {
                     throw new IllegalStateException("CSRF Token check failed");
                 }
